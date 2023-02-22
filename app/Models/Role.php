@@ -8,10 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Role extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        "name"
+    ];
+    
     public function employees(){
         return $this -> belongsToMany(Employee::class);
     }
     public function projects(){
         return $this -> belongsToMany(Project::class);
     }
+
 }
