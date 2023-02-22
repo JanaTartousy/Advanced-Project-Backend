@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Evaluation extends Model
 {
     use HasFactory;
+    
+    protected $fillable =[
+        "evaluation",
+        "evaluation_date",
+    ];
 }
