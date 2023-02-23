@@ -10,7 +10,12 @@ class Evaluation extends Model
     use HasFactory;
     
     protected $fillable =[
-        "evaluation",
-        "evaluation_date",
+        "date_evaluated",
+        "evaluation"
     ];
+
+    public function employeeKpi ()
+    {
+        return $this->belongsTo(EmployeeKpi::class);
+    }
 }
