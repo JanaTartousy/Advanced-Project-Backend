@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Evaluation extends Model
 {
     use HasFactory;
-    
-    protected $fillable =[
-        "date_evaluated",
-        "evaluation"
-    ];
 
-    public function employeeKpi ()
+    protected $fillable = ['date_evaluated', 'evaluation'];
+    public function employees()
     {
-        return $this->belongsTo(EmployeeKpi::class);
+        return $this->hasOne(Employee::class);
+    }
+    public function kpis()
+    {
+        return $this->hasOne(KPI::class);
     }
 }

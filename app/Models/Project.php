@@ -15,6 +15,7 @@ class Project extends Model
         "finished",
         "team_id"
     ];
+
     protected $casts = [
         'finished' => 'boolean',
     ];
@@ -23,10 +24,19 @@ class Project extends Model
     {
         return $this->belongsTo(Team::class);
     }
-    public function employees(){
-        return $this -> belongsToMany(Employee::class);
+
+    public function employeeRoles()
+    {
+        return $this->hasMany(EmployeeRole::class);
     }
-    public function role(){
-        return $this -> belongsToMany(Role::class);
+
+    public function employees()
+    {
+        return $this->belongsToMany(Employee::class, 'employee_role')->withPivot('role_id');
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'employee_role')->withPivot('employee_id');
     }
 }

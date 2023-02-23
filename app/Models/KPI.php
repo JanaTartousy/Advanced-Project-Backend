@@ -13,12 +13,5 @@ class KPI extends Model
         "name",
         "description"
     ];
-    public function employees(){
-        return $this -> belongsToMany(Employee::class);
-    }
-    public function projects(){
-        return $this -> belongsToMany(Project::class);
-    }
-
 
 }
