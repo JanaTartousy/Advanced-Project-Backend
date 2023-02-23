@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEmployeesKpisTable extends Migration
+class CreateProjectsEmployeeRoleTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,14 +15,14 @@ class CreateEmployeesKpisTable extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('employees_kpis', function (Blueprint $table) {
+        Schema::create('projects_employee_role', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('kpi_id');
-            $table->foreign('kpi_id')->references('id')->on('kpis');
-            $table->unsignedBigInteger('evaluation_id');
-            $table->foreign('evaluation_id')->references('id')->on('evaluations');
+            $table->unsignedBigInteger('role_id');
+            $table->foreign('role_id')->references('id')->on('roles');
             $table->unsignedBigInteger('employee_id');
             $table->foreign('employee_id')->references('id')->on('employees');
+            $table->unsignedBigInteger('project_id');
+            $table->foreign('project_id')->references('id')->on('projects');
             $table->timestamps();
         });
 
@@ -36,6 +36,6 @@ class CreateEmployeesKpisTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('employees_kpis');
+        Schema::dropIfExists('projects_employee_role');
     }
 }

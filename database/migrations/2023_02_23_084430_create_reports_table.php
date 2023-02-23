@@ -18,6 +18,7 @@ class CreateReportsTable extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
             $table->text('file');
+            $table->timestamps();
         });
 
         Schema::enableForeignKeyConstraints();

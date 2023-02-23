@@ -19,6 +19,7 @@ class CreateRolesTable extends Migration
             $table->id();
             $table->text('name');
             $table->timestamps();
+
         });
 
         Schema::enableForeignKeyConstraints();

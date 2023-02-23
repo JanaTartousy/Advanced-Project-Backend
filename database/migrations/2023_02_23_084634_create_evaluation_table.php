@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEvaluationsTable extends Migration
+class CreateEvaluationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,10 +15,15 @@ class CreateEvaluationsTable extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('evaluations', function (Blueprint $table) {
+        Schema::create('evaluation', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('date_evaluated');
+            $table->unsignedBigInteger('kpi_id');
+            $table->foreign('kpi_id')->references('id')->on('kpis');
+            $table->unsignedBigInteger('employee_id');
+            $table->foreign('employee_id')->references('id')->on('employees');
             $table->bigInteger('evaluation');
+            $table->dateTime('evaluation_date');
+            $table->timestamps();
         });
 
         Schema::enableForeignKeyConstraints();
@@ -31,6 +36,6 @@ class CreateEvaluationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('evaluations');
+        Schema::dropIfExists('evaluation');
     }
 }
