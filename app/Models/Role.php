@@ -12,12 +12,17 @@ class Role extends Model
     protected $fillable = [
         "name"
     ];
-    
-    public function employees(){
-        return $this -> belongsToMany(Employee::class);
-    }
-    public function projects(){
-        return $this -> belongsToMany(Project::class);
+
+    public function employees()
+    {
+        return $this->belongsToMany(Employee::class, 'employee_role');
     }
 
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'employee_role')->withPivot('employee_id');
+    }
 }
+
+
+

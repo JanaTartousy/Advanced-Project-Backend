@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEmployeesTable extends Migration
+class CreateReportsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,16 +15,9 @@ class CreateEmployeesTable extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('employees', function (Blueprint $table) {
+        Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->text('first_name');
-            $table->text('last_name');
-            $table->text('email')->unique();
-            $table->text('phone_number')->unique();
-            $table->text('picture');
-            $table->date('dob');
-            $table->unsignedBigInteger('team_id');
-            $table->foreign('team_id')->references('id')->on('teams');
+            $table->text('file');
             $table->timestamps();
         });
 
@@ -38,6 +31,6 @@ class CreateEmployeesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('employees');
+        Schema::dropIfExists('reports');
     }
 }

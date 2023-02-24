@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateReportsTable extends Migration
+class CreateRolesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,9 +15,11 @@ class CreateReportsTable extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('reports', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->text('file');
+            $table->text('name');
+            $table->timestamps();
+
         });
 
         Schema::enableForeignKeyConstraints();
@@ -30,6 +32,6 @@ class CreateReportsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reports');
+        Schema::dropIfExists('roles');
     }
 }
