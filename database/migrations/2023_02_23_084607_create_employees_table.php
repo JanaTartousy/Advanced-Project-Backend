@@ -23,7 +23,7 @@ class CreateEmployeesTable extends Migration
             $table->text('phone_number')->unique();
             $table->text('picture');
             $table->date('dob');
-            $table->unsignedBigInteger('team_id');
+            $table->unsignedBigInteger('team_id')->nullable();
             $table->foreign('team_id')->references('id')->on('teams');
             $table->timestamps();
         });
