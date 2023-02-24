@@ -21,9 +21,19 @@ class KPIController extends Controller
     ]);
 }
 
+public function getAll()
+{
+    try {
+        $kpis = Kpi::all();
+        return response()->json($kpis, 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Failed to retrieve KPIs.'], 500);
+    }
+}
+
     public function getKpi(Request $request, $id){
 
-    $kpi =  Kpi::find($id)->get();
+    $kpi =  Kpi::where("id",$id)->get();
 
     return response()->json([
         'message' => $kpi
@@ -53,4 +63,5 @@ class KPIController extends Controller
         ]);
     
 }
+
 }

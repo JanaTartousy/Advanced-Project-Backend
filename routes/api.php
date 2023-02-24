@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::Post("/kpi", [KPIController::class, "AddKpi"]);
+Route::Get("/kpi", [KPIController::class, "getAll"]);
 Route::Get("/kpi/{id}", [KPIController::class, "getKpi"]);
 Route::Delete("/kpi/{id}", [KPIController::class, "deleteKpi"]);
 Route::Patch("/kpi/{id}", [KPIController::class, "editKpi"]);
