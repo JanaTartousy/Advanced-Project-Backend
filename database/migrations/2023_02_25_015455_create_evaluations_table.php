@@ -18,7 +18,9 @@ return new class extends Migration
             $table->id();
             $table->date('date_evaluated');
             $table->text('evaluation');
+            $table->unsignedBigInteger('employee_id');
             $table->foreign('employee_id')->references('id')->on('employees');
+            $table->unsignedBigInteger('kpi_id');
             $table->foreign('kpi_id')->references('id')->on('kpis');
             $table->timestamps();
         });
