@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\KPI;
+use App\Models\Kpi;
 
 class KpiController extends Controller
 {
@@ -62,6 +62,15 @@ public function getAll()
             'message' => "Kpi deleted successfully!"
         ]);
     
+}
+
+    public function evaluations(Kpi $kpi)
+{
+    $evaluations = $kpi->evaluations;
+    
+    return response()->json([
+        'evaluations' => $evaluations
+    ]);
 }
 
 }
