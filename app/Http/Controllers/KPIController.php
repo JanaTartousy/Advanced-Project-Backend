@@ -36,7 +36,7 @@ public function getAll()
     $kpi =  Kpi::where("id",$id)->get();
 
     return response()->json([
-        'message' => $kpi
+        'kpi' => $kpi
     ]);
 
 }

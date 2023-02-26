@@ -14,7 +14,7 @@ class KPI extends Model
         "description"
     ];
     public function evaluation(){
-        return $this -> hasMany(evaluations::class);
+        return $this -> hasMany(Evaluation::class);
     }
     // public function projects(){
     //     return $this -> belongsToMany(Project::class);
