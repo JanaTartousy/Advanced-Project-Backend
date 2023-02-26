@@ -12,18 +12,16 @@ class EmployeeRole extends Model
         "employee_id","project_id","role_id",
     ];
 
-    public function employee()
+    public function employees()
     {
-        return $this->belongsTo(Employee::class);
+        return $this->hasMany(Employee::class);
     }
-
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
+    }
     public function role()
     {
         return $this->belongsTo(Role::class);
-    }
-
-    public function project()
-    {
-        return $this->belongsTo(Project::class);
     }
 }

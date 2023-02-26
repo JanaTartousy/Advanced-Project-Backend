@@ -25,25 +25,20 @@ class Project extends Model
         return $this->belongsTo(Team::class);
     }
 
-    public function employeeRoles()
+    public function employeeRole()
     {
-        return $this->hasMany(EmployeeRole::class);
+        return $this->belongsTo(EmployeeRole::class);
     }
+    public function getEmployeesWithRoles()
+{
+    return $this->hasManyThrough(
+        Employee::class,
+        Team::class,
+        'project_id', // Foreign key on teams table...
+        'team_id', // Foreign key on employees table...
+        'id', // Local key on projects table...
+        'id' // Local key on teams table...
+    )->with('employeeRole.role:id,fist_name,last_name');
+}
 
-    public function employees()
-    {
-        return $this->belongsToMany(Employee::class, 'employee_role')->withPivot('role_id');
-    }
-
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class, 'employee_role')->withPivot('employee_id');
-    }
-
-    public function employeesWithRoles()
-    {
-        return $this->hasManyThrough(Employee::class, EmployeeRole::class, 'project_id', 'id', 'id', 'employee_id')
-                    ->with('roles')
-                    ->select('employees.*', 'employee_role.role_id');
-    }
 }

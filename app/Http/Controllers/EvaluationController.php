@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Evaluation;
 use App\Models\Employee;
-use App\Models\KPI;
+use App\Models\Kpi;
 
 class EvaluationController extends Controller
 {
@@ -70,7 +70,7 @@ class EvaluationController extends Controller
             $evaluations->employee()->associate($employee);
 
             $kpi_id = $request->input('kpi_id');
-            $kpi = KPI::findOrFail($kpi_id);
+            $kpi = Kpi::findOrFail($kpi_id);
             $evaluations->kpi()->associate($kpi);
 
             $evaluations->save();

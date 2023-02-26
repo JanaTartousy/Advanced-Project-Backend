@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Employee;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class EmployeeController extends Controller
@@ -13,13 +14,13 @@ class EmployeeController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:employees,email,' ,
+            'email' => 'required|email|unique:employees,email,',
             'dob' => 'required|date',
-            'phone_number' => 'required|string|unique:employees,phone_number,' ,
-            'picture' => 'nullable|string',
+            'phone_number' => 'required|string|unique:employees,phone_number,',
             'team_id' => 'nullable|exists:teams,id',
+            'picture' => 'required|image|max:2048', // Added validation for picture
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json(
                 [
@@ -29,32 +30,43 @@ class EmployeeController extends Controller
                 422,
             );
         }
-
-        $employee = Employee::create($validator);
-
+    
+        $employee = new Employee($validator->validated());
+    
+        // Save the picture to storage
+        if ($request->hasFile('picture')) {
+            $picture = $request->file('picture');
+            $filename = time() . '_' . $picture->getClientOriginalName();
+            $imagePath=$picture->storeAs('public/employee_pictures', $filename);
+            $employee->picture = $imagePath;
+        }
+    
+        $employee->save();
+    
         return response()->json([
             'success' => true,
             'message' => 'Employee created successfully',
             'employee' => $employee,
         ]);
     }
+    
     public function getEmployee($id)
-    {
-        $employee = Employee::fine($id);
+{
+    $employee = Employee::find($id);
 
-        if (!$employee) {
-            return response()->json(
-                [
-                    'message' => 'Employee not found',
-                ],
-                404,
-            );
-        }
-
-        return response()->json([
-            'employee' => $employee,
-        ]);
+    if (!$employee) {
+        return response()->json(
+            [
+                'message' => 'Employee not found',
+            ],
+            404,
+        );
     }
+
+    return response()->json([
+        'employee' => $employee,
+    ]);
+}
 
     public function getEmployees()
     {
@@ -64,45 +76,52 @@ class EmployeeController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'first_name' => 'string|max:255',
-            'last_name' => 'string|max:255',
-            'email' => 'email|unique:employees,email,' . $id,
-            'dob' => 'date',
-            'phone_number' => 'string|unique:employees,phone_number,' . $id,
-            'picture' => 'string',
-            'team_id' => 'exists:teams,id',
-        ]);
+    
+public function update(Request $request, $id)
+{
+    $validator = Validator::make($request->all(), [
+        'first_name' => 'string|max:255',
+        'last_name' => 'string|max:255',
+        'email' => 'email|unique:employees,email,' . $id,
+        'dob' => 'date',
+        'phone_number' => 'string|unique:employees,phone_number,' . $id,
+        'picture' => 'image|max:2048', // limit picture size to 2MB
+        'team_id' => 'exists:teams,id',
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json(
-                [
-                    'message' => 'Validation error',
-                    'errors' => $validator->errors(),
-                ],
-                422,
-            );
-        }
-
-        $employee = Employee::find($id);
-        if (!$employee) {
-            return response()->json(
-                [
-                    'message' => 'Employee not found',
-                ],
-                404,
-            );
-        }
-
-        $employee->update($request->all());
-
-        return response()->json([
-            'message' => 'Employee updated successfully',
-            'employee' => $employee,
-        ]);
+    if ($validator->fails()) {
+        return response()->json(
+            [
+                'message' => 'Validation error',
+                'errors' => $validator->errors(),
+            ],
+            422,
+        );
     }
+
+    $employee = Employee::find($id);
+    $employee->first_name = $request->input('first_name')?:$employee->first_name;
+    $employee->last_name = $request->input('last_name')?:$employee->last_name;
+    $employee->email = $request->input('email')?:$employee->email;
+    $employee->dob = $request->input('dob')?:$employee->dob;
+    $employee->phone_number = $request->input('phone_number')?:$employee->phone_number;
+    $employee->team_id = $request->input('team_id')?:$employee->team_id;
+    
+    if ($request->hasFile('picture')) {
+        Storage::delete($employee->picture); // delete old picture
+        $picture = $request->file('picture');
+        $filename = time() . '_' . $picture->getClientOriginalName();
+        $imagePath=$picture->storeAs('public/employee_pictures', $filename);
+        $employee->picture = $imagePath;
+    }
+    
+    $employee->save();
+
+    return response()->json([
+        'message' => 'Employee updated successfully',
+        'employee' => $employee,
+    ]);
+}
 
     public function delete($id)
     {
@@ -115,8 +134,10 @@ class EmployeeController extends Controller
                 404,
             );
         }
-
+    
+        Storage::delete($employee->picture); // delete employee's picture
         $employee->delete();
+    
         return response()->json([
             'message' => 'Employee deleted successfully',
         ]);

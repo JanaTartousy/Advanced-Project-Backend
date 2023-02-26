@@ -11,23 +11,14 @@ class Employee extends Model
 
     protected $fillable = ['first_name', 'last_name', 'email', 'dob', 'phone_number', 'picture', 'team_id'];
 
+
     public function team()
     {
         return $this->belongsTo(Team::class);
     }
 
-    public function evaluation()
+    public function employeeRole()
     {
-        return $this->belongsTo(Evaluation::class);
-    }
-
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class, 'employee_role');
-    }
-
-    public function projects()
-    {
-        return $this->belongsToMany(Project::class, 'employee_roles', 'employee_id', 'project_id')->withPivot('role_id');
+        return $this->belongsTo(EmployeeRole::class, 'id', 'employee_id');
     }
 }

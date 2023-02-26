@@ -3,62 +3,89 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use \Illuminate\Http\JsonResponse;
 use App\Models\Project;
 use Illuminate\Support\Facades\Validator;
 
 class ProjectController extends Controller
 {
-/**
- * Display a listing of the resource.
- *
- * @return \Illuminate\Http\JsonResponse
- */
-public function getProjects()
-{
-    $projects = Project::with('team.employees.employeeRole.role')->get();
+    /**
+     * Display a listing of the resource.
+     *
+     * @return JsonResponse
+     */
+    public function getProjects()
+    {
+        $projects = Project::with('team.employees.employeeRole.role')->get();
 
-    return response()->json([
-        'message' => 'Projects retrieved successfully',
-        'projects' => $projects,
-    ]);
-}
-
-/**
- * Display the specified resource.
- *
- * @param  int  $id
- * @return \Illuminate\Http\JsonResponse
- */
-public function getProject($id)
-{
-    $project = Project::with('team.employees', 'employeesWithRoles')->find($id);
-
-    if (!$project) {
         return response()->json([
-            'message' => 'Project not found',
-        ], 404);
+            'message' => 'Projects retrieved successfully',
+            'projects' => $projects,
+        ]);
     }
 
-    return response()->json([
-        'message' => 'Project retrieved successfully',
-        'project' => $project,
-    ]);
-}
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return JsonResponse
+     */
+    public function getProject($id)
+    {
+        $project = Project::with('team.employees.employeeRole.role')->find($id);
 
+        if (!$project) {
+            return response()->json(
+                [
+                    'message' => 'Project not found',
+                ],
+                404,
+            );
+        }
 
+        // Extract employees with their roles
+        $employees = collect();
+        foreach ($project->team->employees as $employee) {
+            $employee_role = $employee->employeeRole;
+            if ($employee_role) {
+                $role = $employee_role->role;
+                if ($role) {
+                    $employees->push([
+                        'id' => $employee->id,
+                        'first_name' => $employee->first_name,
+                        'last_name' => $employee->last_name,
+                        'email' => $employee->email,
+                        'role' => $role->name,
+                    ]);
+                }
+            }
+        }
+
+        return response()->json([
+            'message' => 'Project retrieved successfully',
+            'project' => [
+                'id' => $project->id,
+                'name' => $project->name,
+                'description' => $project->description,
+                'finished' => $project->finished,
+                'team_id' => $project->team_id,
+                'employees' => $employees,
+            ],
+        ]);
+    }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'finished' => 'nullable|boolean',
+            'finished' => 'boolean:default false',
             'team_id' => 'nullable|exists:teams,id',
         ]);
 
@@ -85,7 +112,7 @@ public function getProject($id)
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function update(Request $request, $id)
     {
@@ -129,7 +156,7 @@ public function getProject($id)
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function delete($id)
     {
