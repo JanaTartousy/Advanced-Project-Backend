@@ -6,6 +6,7 @@ use App\Http\Controllers\KPIController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\EvaluationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,3 +38,12 @@ Route::post('/employees', [EmployeeController::class, 'store']);
 Route::post('/roles', [RoleController::class, 'store']);
 Route::put('/roles/{id}', [\App\Http\Controllers\RoleController::class, 'update']);
 Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
+
+// Route::Post('/evaluation', [EvaluationController::class, 'AddEvaluation']);
+
+Route::Post('/evaluations', [EvaluationController::class, 'AddEvaluation']);
+Route::Get('/evaluations', [EvaluationController::class, 'getAllEvaluations']);
+Route::Get('/evaluations/{id}', [EvaluationController::class, 'getEvaluationById']);
+Route::Patch('/evaluations/{id}', [EvaluationController::class, 'updateEvaluation']);
+Route::Delete('/evaluations/{id}', [EvaluationController::class, 'deleteEvaluation']);
+
