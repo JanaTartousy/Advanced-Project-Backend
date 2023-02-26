@@ -7,10 +7,13 @@ use App\Models\Role;
 
 class RoleController extends Controller
 {
-    public function index()
+    public function getRoles()
     {
         $roles = Role::all();
-        return view('roles.index', compact('roles'));
+        return response()->json([
+            'message' => 'Role created successfully',
+            'roles' => $roles,
+        ]);
     }
 
     public function create()
@@ -30,47 +33,59 @@ class RoleController extends Controller
             'role' => $role,
         ]);
     }
+
+    public function getRole($id)
+    {
+        $role = Role::find($id);
+        if (!$role) {
+            return response()->json([
+                'message' => 'Role not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'role' => $role,
+        ]);
+    }
+
     public function edit(Role $role)
     {
         return view('roles.edit', compact('role'));
     }
 
     public function update(Request $request, $id)
-{
-    $role = Role::find($id);
-    if (!$role) {
+    {
+        $role = Role::find($id);
+        if (!$role) {
+            return response()->json([
+                'message' => 'Role not found'
+            ], 404);
+        }
+
+        $name = $request->input('name');
+        if (empty($name)) {
+            return response()->json([
+                'message' => 'Name cannot be empty'
+            ], 422);
+        }
+
+        $role->update([
+            'name' => $name,
+        ]);
+
         return response()->json([
-            'message' => 'Role not found'
-        ], 404);
+            'message' => 'Role updated successfully',
+            'role' => $role,
+        ]);
     }
-
-    $name = $request->input('name');
-    if (empty($name)) {
-        return response()->json([
-            'message' => 'Name cannot be empty'
-        ], 422);
-    }
-
-    $role->update([
-        'name' => $name,
-    ]);
-
-    return response()->json([
-        'message' => 'Role updated successfully',
-        'role' => $role,
-    ]);
-}
 
     public function destroy($id)
     {
         $role = Role::find($id);
         if (!$role) {
-            return response()->json(
-                [
-                    'message' => 'Role not found',
-                ],
-                404,
-            );
+            return response()->json([
+                'message' => 'Role not found',
+            ], 404);
         }
 
         $role->delete();

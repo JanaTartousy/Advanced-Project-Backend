@@ -7,10 +7,13 @@ use App\Models\Role;
 
 class RoleController extends Controller
 {
-    public function getRoles()
+    public function index()
     {
         $roles = Role::all();
-        return view('roles.index', compact('roles'));
+        return response()->json([
+            "success" => true,
+            "roles" => $roles
+        ]);
     }
 
     public function create()
@@ -20,6 +23,7 @@ class RoleController extends Controller
 
     public function store(Request $request)
     {
+
         $role = Role::create([
             'name' => $request->input('name'),
         ]);
@@ -30,16 +34,13 @@ class RoleController extends Controller
         ]);
     }
 
-    public function getRole($id)
+    public function show($id)
     {
         $role = Role::find($id);
         if (!$role) {
-            return response()->json(
-                [
-                    'message' => 'Role not found',
-                ],
-                404,
-            );
+            return response()->json([
+                'message' => 'Role not found'
+            ], 404);
         }
 
         return response()->json([
@@ -56,22 +57,16 @@ class RoleController extends Controller
     {
         $role = Role::find($id);
         if (!$role) {
-            return response()->json(
-                [
-                    'message' => 'Role not found',
-                ],
-                404,
-            );
+            return response()->json([
+                'message' => 'Role not found'
+            ], 404);
         }
 
         $name = $request->input('name');
         if (empty($name)) {
-            return response()->json(
-                [
-                    'message' => 'Name cannot be empty',
-                ],
-                422,
-            );
+            return response()->json([
+                'message' => 'Name cannot be empty'
+            ], 422);
         }
 
         $role->update([
@@ -88,12 +83,9 @@ class RoleController extends Controller
     {
         $role = Role::find($id);
         if (!$role) {
-            return response()->json(
-                [
-                    'message' => 'Role not found',
-                ],
-                404,
-            );
+            return response()->json([
+                'message' => 'Role not found',
+            ], 404);
         }
 
         $role->delete();

@@ -9,7 +9,7 @@ class Employee extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['first_name', 'last_name', 'email', 'dob', 'phone_number', 'picture'];
+    protected $fillable = ['first_name', 'last_name', 'email', 'dob', 'phone_number', 'picture', 'team_id'];
 
     public function team()
     {
@@ -28,8 +28,6 @@ class Employee extends Model
 
     public function projects()
     {
-        return $this->belongsToMany(Project::class, 'employee_role')->withPivot('role_id');
+        return $this->belongsToMany(Project::class, 'employee_roles', 'employee_id', 'project_id')->withPivot('role_id');
     }
 }
-
-

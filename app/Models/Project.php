@@ -13,6 +13,7 @@ class Project extends Model
         "name",
         "description",
         "finished",
+        "team_id"
     ];
 
     protected $casts = [
@@ -37,5 +38,12 @@ class Project extends Model
     public function roles()
     {
         return $this->belongsToMany(Role::class, 'employee_role')->withPivot('employee_id');
+    }
+
+    public function employeesWithRoles()
+    {
+        return $this->hasManyThrough(Employee::class, EmployeeRole::class, 'project_id', 'id', 'id', 'employee_id')
+                    ->with('roles')
+                    ->select('employees.*', 'employee_role.role_id');
     }
 }

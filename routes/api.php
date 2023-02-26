@@ -8,7 +8,10 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\RoleController;
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\EmployeeRoleController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\TeamController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -31,10 +34,18 @@ Route::Delete('/kpi/{id}', [KPIController::class, 'deleteKpi']);
 Route::Patch('/kpi/{id}', [KPIController::class, 'editKpi']);
 
 
+Route::get('/projects', [ProjectController::class, 'getProjects']);
 Route::post('/projects', [ProjectController::class, 'store']);
+Route::get('/projects/{id}', [ProjectController::class, 'getProject']);
+Route::patch('/projects/{id}', [ProjectController::class, 'update']);
+Route::post('/projects/{id}', [ProjectController::class, 'destroy']);
 
 
 Route::post('/employees', [EmployeeController::class, 'store']);
+Route::get('/employees', [EmployeeController::class, 'getEmployees']);
+Route::get('/employees/{id}', [EmployeeController::class, 'getEmployee']);
+Route::patch('/employees/{id}', [EmployeeController::class, 'update']);
+Route::delete('/employees/{id}', [EmployeeController::class, 'destroy']);
 
 Route::get('/roles', [RoleController::class, 'getRoles']);
 Route::get('/roles/{id}', [RoleController::class, 'getRole']);
@@ -57,3 +68,16 @@ Route::Get('/report/{id}', [ReportController::class, 'getReportByID']);
 Route::Get('/report', [ReportController::class, 'getAllReports']);
 Route::Post('/report', [ReportController::class, 'addReport']);
 Route::Delete('/report', [ReportController::class, 'deleteReport']);
+
+Route::get('/teams', [TeamController::class, 'getTeams']);
+Route::get('/teams/{id}', [TeamController::class, 'getTeam']);
+Route::post('/teams', [TeamController::class, 'store']);
+Route::patch('/teams/{id}', [TeamController::class, 'update']);
+Route::delete('/teams/{id}', [TeamController::class, 'destroy']);
+
+Route::get('/employeerole', [EmployeeRoleController::class, 'get']);
+Route::get('/employeerole/{id}', [EmployeeRoleController::class, 'destroy']);
+Route::patch('/employeerole/{id}', [EmployeeRoleController::class, 'destroy']);
+Route::post('/employeerole', [EmployeeRoleController::class, 'assignRole']);
+Route::delete('/employeerole/{id}', [EmployeeRoleController::class, 'destroy']);
+

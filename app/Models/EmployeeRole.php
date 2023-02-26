@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class EmployeeRole extends Model
 {
     use HasFactory;
+    protected $fillable =[
+        "employee_id","project_id","role_id",
+    ];
 
     public function employee()
     {
