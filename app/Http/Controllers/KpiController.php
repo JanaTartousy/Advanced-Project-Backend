@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\KPI;
 
-class KPIController extends Controller
+class KpiController extends Controller
 {
     public function AddKpi(Request $request){
 
