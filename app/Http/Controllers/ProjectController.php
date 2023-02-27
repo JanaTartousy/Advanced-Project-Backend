@@ -158,7 +158,7 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return JsonResponse
      */
-    public function delete($id)
+    public function destroy($id)
     {
         $project = Project::find($id);
 

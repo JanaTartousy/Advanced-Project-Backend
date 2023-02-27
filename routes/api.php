@@ -46,7 +46,7 @@ Route::get('/projects', [ProjectController::class, 'getProjects']);
 Route::post('/projects', [ProjectController::class, 'store']);
 Route::get('/projects/{id}', [ProjectController::class, 'getProject']);
 Route::patch('/projects/{id}', [ProjectController::class, 'update']);
-Route::post('/projects/{id}', [ProjectController::class, 'destroy']);
+Route::delete('/projects/{id}', [ProjectController::class, 'destroy']);
 
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees', [EmployeeController::class, 'getEmployees']);
@@ -57,7 +57,7 @@ Route::delete('/employees/{id}', [EmployeeController::class, 'destroy']);
 Route::get('/roles', [RoleController::class, 'getRoles']);
 Route::get('/roles/{id}', [RoleController::class, 'getRole']);
 Route::post('/roles', [RoleController::class, 'store']);
-Route::patch('/roles/{id}', [\App\Http\Controllers\RoleController::class, 'update']);
+Route::patch('/roles/{id}', [RoleController::class, 'update']);
 Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
 
 Route::Post('/admin', [AdminController::class, 'addAdmin']);
