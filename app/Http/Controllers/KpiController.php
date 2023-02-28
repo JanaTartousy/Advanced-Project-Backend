@@ -43,16 +43,23 @@ public function getAll()
 
     public function editKpi(Request $request, $id){
 
-        $kpi =  Kpi::find($id);
-        $inputs = $request;
-        $kpi->update($inputs);
+        try {
+            $kpi = kpi::find($id);
+            $inputs = $request->except("_method");
+            $kpi->update($inputs);
 
-        return response()->json([
-            'message' => "Kpi edited successfully!",
-             'kpi' => $kpi,
-        ]);
+            return response()->json([
+                "message" => $kpi
+            ]);
 
+        } catch (\Exception $e) {
+            return response()->json([
+                "kpi" => $e->$kpi
+            ]);
+        }
     }
+
+    
 
     public function deleteKpi(Request $request, $id){
 

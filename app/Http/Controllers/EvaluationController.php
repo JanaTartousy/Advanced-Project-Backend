@@ -60,35 +60,6 @@ class EvaluationController extends Controller
 
     public function updateEvaluation(Request $request, $id)
     {
-        // try {
-        //     // find the evaluation record
-        //     $evaluations = Evaluation::find($id);
-        //     $validator=Validator::make($request->all(),[
-        //         'employee_id'=>'nullable|exists:employees,id',
-        //         'kpi_id'=>'nullable|exists:kpis,id',
-        //         'date_evaluated'=>'nullable|date',
-        //         'evaluation'=>'nullable|sting'
-        //     ]);
-        //     if($validator->fail()){
-        //         return response()->json([
-        //             'success'=>false,
-        //             'message'=> $validator->errors(),
-        //         ]);
-        //     }
-
-        //     $evaluations->update($validator->validated());
-
-        //     return response()->json([
-        //         'message' => 'Evaluation updated successfully',
-        //         'Evaluation'=>$evaluations
-        //     ]);
-
-        // } catch (\Exception $e) {
-        //     return response()->json([
-        //         'error' => 'Evaluation update failed',
-        //         'message' => $e->getMessage()
-        //     ], 500);
-        // }
         $validator = Validator::make($request->all(), [
             'evaluation' => 'string|max:255',
             'date_evaluated' => 'date',
