@@ -6,37 +6,41 @@ use Illuminate\Http\Request;
 use App\Models\Evaluation;
 use App\Models\Employee;
 use App\Models\Kpi;
+use Illuminate\Support\Facades\Validator;
 
 class EvaluationController extends Controller
 {
-  
+
     public function AddEvaluation(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
+            'evaluation' => 'required|string|max:255',
             'date_evaluated' => 'required|date',
-            'evaluation' => 'required|string',
-            'kpi_id' => 'required|exists:kpis,id',
-            'employee_id' => 'required|exists:employees,id',
+            'employee_id' => 'nullable|exists:employees,id',
+            'kpi_id' => 'nullable|exists:kpis,id',
         ]);
 
-        $kpi = Kpi::findOrFail($request->input('kpi_id'));
-        $employee = Employee::findOrFail($request->input('employee_id'));
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'message' => 'Validation error',
+                    'errors' => $validator->errors(),
+                ],
+                422,
+            );
+        }
 
-        $evaluations = new Evaluation([
-            'date_evaluated' => $request->input('date_evaluated'),
-            'evaluation' => $request->input('evaluation'),
-        ]);
+        $evaluation = new Evaluation($validator->validated());
 
-        $kpi->evaluations()->save($evaluations);
-        $employee->evaluations()->save($evaluations);
+        $evaluation->save();
 
         return response()->json([
-            'message' => 'Evaluation created successfully!',
-            'data' => $evaluations,
-        ], 201);
+            'success' => true,
+            'message' => 'Evaluation created successfully',
+            'Evaluation' => $evaluation,
+        ]);
     }
 
-   
     public function deleteEvaluation($id)
     {
         try {
@@ -56,36 +60,62 @@ class EvaluationController extends Controller
 
     public function updateEvaluation(Request $request, $id)
     {
-        try {
-            // find the evaluation record
-            $evaluations = Evaluation::findOrFail($id);
+        // try {
+        //     // find the evaluation record
+        //     $evaluations = Evaluation::find($id);
+        //     $validator=Validator::make($request->all(),[
+        //         'employee_id'=>'nullable|exists:employees,id',
+        //         'kpi_id'=>'nullable|exists:kpis,id',
+        //         'date_evaluated'=>'nullable|date',
+        //         'evaluation'=>'nullable|sting'
+        //     ]);
+        //     if($validator->fail()){
+        //         return response()->json([
+        //             'success'=>false,
+        //             'message'=> $validator->errors(),
+        //         ]);
+        //     }
 
-            // update the evaluation details
-            $evaluations->date_evaluated = $request->input('date_evaluated');
-            $evaluations->evaluations = $request->input('evaluation');
+        //     $evaluations->update($validator->validated());
 
-            // find and assign the associated employee and kpi
-            $employee_id = $request->input('employee_id');
-            $employee = Employee::findOrFail($employee_id);
-            $evaluations->employee()->associate($employee);
+        //     return response()->json([
+        //         'message' => 'Evaluation updated successfully',
+        //         'Evaluation'=>$evaluations
+        //     ]);
 
-            $kpi_id = $request->input('kpi_id');
-            $kpi = Kpi::findOrFail($kpi_id);
-            $evaluations->kpi()->associate($kpi);
+        // } catch (\Exception $e) {
+        //     return response()->json([
+        //         'error' => 'Evaluation update failed',
+        //         'message' => $e->getMessage()
+        //     ], 500);
+        // }
+        $validator = Validator::make($request->all(), [
+            'evaluation' => 'string|max:255',
+            'date_evaluated' => 'date',
+            'employee_id' => 'exists:employees,id',
+            'kpi_id' => 'exists:kpis,id',
 
-            $evaluations->save();
-
-            return response()->json([
-                'message' => 'Evaluation updated successfully'
-            ]);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Evaluation update failed',
-                'message' => $e->getMessage()
-            ], 500);
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'message' => 'Validation error',
+                    'errors' => $validator->errors(),
+                ],
+                422,
+            );
         }
+        $evaluation=Evaluation::find($id);
+        $evaluation->update($validator->validated());
+
+    
+        return response()->json([
+            'message' => 'Employee updated successfully',
+            'employee' => $evaluation,
+        ]);
     }
+    
 
     public function getAllEvaluations()
     {
@@ -101,14 +131,10 @@ class EvaluationController extends Controller
     public function getEvaluationById($id)
     {
         try {
-            $evaluations = Evaluation::findOrFail($id);
-            $employee = $evaluations->employee;
-            $kpi = $evaluations->kpi;
+            $evaluation = Evaluation::with('employees','kpis')->find($id);
 
             return response()->json([
-                'evaluation' => $evaluations,
-                'employee' => $employee,
-                'kpi' => $kpi
+                'evaluation' => $evaluation,
             ]);
 
         } catch (\Exception $e) {
