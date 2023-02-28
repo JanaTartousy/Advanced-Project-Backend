@@ -100,12 +100,7 @@ public function update(Request $request, $id)
     }
 
     $employee = Employee::find($id);
-    $employee->first_name = $request->input('first_name')?:$employee->first_name;
-    $employee->last_name = $request->input('last_name')?:$employee->last_name;
-    $employee->email = $request->input('email')?:$employee->email;
-    $employee->dob = $request->input('dob')?:$employee->dob;
-    $employee->phone_number = $request->input('phone_number')?:$employee->phone_number;
-    $employee->team_id = $request->input('team_id')?:$employee->team_id;
+    $employee->update($validator->validated());
     
     if ($request->hasFile('picture')) {
         Storage::delete($employee->picture); // delete old picture

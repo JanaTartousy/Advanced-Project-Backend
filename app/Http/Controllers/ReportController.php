@@ -3,94 +3,42 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Role;
+use App\Models\Report;
 
-class RoleController extends Controller
+class ReportController extends Controller
 {
-    public function index()
-    {
-        $roles = Role::all();
-        return response()->json([
-            "success" => true,
-            "roles" => $roles
-        ]);
-    }
-
-    public function create()
-    {
-        return view('roles.create');
-    }
-
-    public function store(Request $request)
-    {
-
-        $role = Role::create([
-            'name' => $request->input('name'),
-        ]);
+    public function addReport(Request $request){
+        $report = new Report();
+        $file = $request->input('file');
+        $report->file = $file;
+        $report->save();
 
         return response()->json([
-            'message' => 'Role created successfully',
-            'role' => $role,
+            'message' => 'Report added successfully'
+        ]);
+    }
+    public function getAllReports(Request $request){
+        $reports = Report::all();
+        return response()->json([
+            'message' => $reports,
         ]);
     }
 
-    public function show($id)
-    {
-        $role = Role::find($id);
-        if (!$role) {
-            return response()->json([
-                'message' => 'Role not found'
-            ], 404);
-        }
+    public function getReportByID(Request $request, $id){
+
+        $report =  Report::find($id);
 
         return response()->json([
-            'role' => $role,
-        ]);
+            'message' => $report,
+        ]); 
     }
 
-    public function edit(Role $role)
-    {
-        return view('roles.edit', compact('role'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $role = Role::find($id);
-        if (!$role) {
-            return response()->json([
-                'message' => 'Role not found'
-            ], 404);
-        }
-
-        $name = $request->input('name');
-        if (empty($name)) {
-            return response()->json([
-                'message' => 'Name cannot be empty'
-            ], 422);
-        }
-
-        $role->update([
-            'name' => $name,
-        ]);
-
-        return response()->json([
-            'message' => 'Role updated successfully',
-            'role' => $role,
+    public function deleteReport(Request $request, $id){
+         $report =  Report::find($id);
+         $report->delete();
+         return response()->json([
+           'message' => 'Report deleted successfully'
         ]);
     }
-
-    public function destroy($id)
-    {
-        $role = Role::find($id);
-        if (!$role) {
-            return response()->json([
-                'message' => 'Role not found',
-            ], 404);
-        }
-
-        $role->delete();
-        return response()->json([
-            'message' => 'Role deleted successfully',
-        ]);
-    }
+    
 }
