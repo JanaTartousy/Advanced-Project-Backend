@@ -64,9 +64,9 @@ public function getAll()
     
 }
 
-    public function evaluations(Kpi $kpi)
+    public function evaluation(Kpi $kpi)
 {
-    $evaluations = $kpi->evaluations;
+    $evaluations = $kpi->evaluation;
     
     return response()->json([
         'evaluations' => $evaluations
