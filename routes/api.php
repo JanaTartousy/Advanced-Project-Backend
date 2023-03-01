@@ -13,6 +13,8 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\EvaluationController;
 
+use App\Http\Controllers\AuthController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -91,3 +93,19 @@ Route::Get('/evaluations', [EvaluationController::class, 'getAllEvaluations']);
 Route::Get('/evaluations/{id}', [EvaluationController::class, 'getEvaluationById']);
 Route::Patch('/evaluations/{id}', [EvaluationController::class, 'updateEvaluation']);
 Route::Delete('/evaluations/{id}', [EvaluationController::class, 'deleteEvaluation']);
+
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/user-profile', [AuthController::class, 'userProfile']);   
+Route::post('/logout', [AuthController::class, 'logout']);
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth'
+], function ($router) {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/refresh', [AuthController::class, 'refresh']);
+    Route::get('/user-profile', [AuthController::class, 'userProfile']);    
+});
