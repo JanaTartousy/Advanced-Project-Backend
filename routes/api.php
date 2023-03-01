@@ -12,6 +12,7 @@ use App\Http\Controllers\EmployeeRoleController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\EvaluationController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,7 @@ use App\Http\Controllers\EvaluationController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::post('/login', [AuthController::class, 'login']);
 
 Route::Post('/kpi', [KpiController::class, 'AddKpi']);
 Route::Get('/kpi', [KpiController::class, 'getAll']);
@@ -91,3 +93,14 @@ Route::Get('/evaluations', [EvaluationController::class, 'getAllEvaluations']);
 Route::Get('/evaluations/{id}', [EvaluationController::class, 'getEvaluationById']);
 Route::Patch('/evaluations/{id}', [EvaluationController::class, 'updateEvaluation']);
 Route::Delete('/evaluations/{id}', [EvaluationController::class, 'deleteEvaluation']);
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth'
+], function ($router) {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/refresh', [AuthController::class, 'refresh']);
+    Route::get('/user-profile', [AuthController::class, 'userProfile']);    
+});

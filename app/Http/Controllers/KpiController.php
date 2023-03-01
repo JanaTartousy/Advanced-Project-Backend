@@ -24,7 +24,7 @@ class KpiController extends Controller
 public function getAll()
 {
     try {
-        $kpis = Kpi::all();
+        $kpis = Kpi::paginate(10);
         return response()->json($kpis, 200);
     } catch (\Exception $e) {
         return response()->json(['message' => 'Failed to retrieve KPIs.'], 500);
