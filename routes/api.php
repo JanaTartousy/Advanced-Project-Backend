@@ -44,9 +44,9 @@ Route::Patch('/kpi/{id}', [KpiController::class, 'editKpi']);
 
 Route::get('/projects', [ProjectController::class, 'getProjects']);
 Route::post('/projects', [ProjectController::class, 'store']);
-Route::get('/projects/{id}', [ProjectController::class, 'getProject']);
-Route::patch('/projects/{id}', [ProjectController::class, 'update']);
-Route::post('/projects/{id}', [ProjectController::class, 'destroy']);
+Route::get('/project/{id}', [ProjectController::class, 'getProject']);
+Route::patch('/project/{id}', [ProjectController::class, 'update']);
+Route::post('/project/{id}', [ProjectController::class, 'destroy']);
 
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees', [EmployeeController::class, 'getEmployees']);
@@ -80,7 +80,7 @@ Route::post('/teams', [TeamController::class, 'store']);
 Route::patch('/teams/{id}', [TeamController::class, 'update']);
 Route::delete('/teams/{id}', [TeamController::class, 'destroy']);
 
-Route::get('/employeerole', [EmployeeRoleController::class, 'get']);
+Route::get('/employeerole', [EmployeeRoleController::class, 'getRoles']);
 Route::get('/employeerole/{id}', [EmployeeRoleController::class, 'destroy']);
 Route::patch('/employeerole/{id}', [EmployeeRoleController::class, 'destroy']);
 Route::post('/employeerole', [EmployeeRoleController::class, 'assignRole']);

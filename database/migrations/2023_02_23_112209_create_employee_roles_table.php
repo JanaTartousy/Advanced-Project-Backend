@@ -17,9 +17,9 @@ return new class extends Migration {
             $table->foreign('employee_id')->references('id')->on('employees');
             $table->unsignedBigInteger('role_id');
             $table->foreign('role_id')->references('id')->on('roles');
-            $table->timestamps();
             $table->unsignedBigInteger('project_id');
             $table->foreign('project_id')->references('id')->on('projects');
+            $table->timestamps();
         });
     }
 

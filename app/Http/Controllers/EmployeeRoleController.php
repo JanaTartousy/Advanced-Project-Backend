@@ -8,9 +8,9 @@ use App\Models\EmployeeRole;
 
 class EmployeeRoleController extends Controller
 {
-    public function getRolesByProject($project_id)
+    public function getRoles()
     {
-        $roles = EmployeeRole::where('project_id', $project_id)->get();
+        $roles = EmployeeRole::get();
 
         return response()->json([
             'message' => 'Roles retrieved successfully',
@@ -36,11 +36,7 @@ class EmployeeRoleController extends Controller
             );
         }
 
-        $employeeRole = EmployeeRole::create([
-            'employee_id' => $request->input('employee_id'),
-            'role_id' => $request->input('role_id'),
-            'project_id' => $request->input('project_id'),
-        ]);
+        $employeeRole = EmployeeRole::create($validator->validated());
 
         return response()->json([
             'message' => 'Role assigned successfully',
@@ -77,10 +73,7 @@ class EmployeeRoleController extends Controller
             );
         }
 
-        $employeeRole->employee_id = $request->input('employee_id');
-        $employeeRole->role_id = $request->input('role_id');
-        $employeeRole->project_id = $request->input('project_id');
-        $employeeRole->save();
+        $employeeRole->update($validator->validated());
 
         return response()->json([
             'message' => 'Employee role updated successfully',
