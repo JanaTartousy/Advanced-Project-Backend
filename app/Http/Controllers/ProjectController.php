@@ -14,9 +14,15 @@ class ProjectController extends Controller
      *
      * @return JsonResponse
      */
-    public function getProjects()
+    public function getProjects(Request $request)
     {
-        $projects = Project::with('team.employees.employeeRole.role')->get();
+        $pageNumber=$request->query("page");
+        $perPage=$request->query("per_page");
+        if($pageNumber){
+            
+            $projects = Project::with('team.employees.employeeRole.role')->paginate($perPage||10, ['*'], 'page', $pageNumber);
+            }else{
+        $projects = Project::with('team.employees.employeeRole.role')->get();}
 
         return response()->json([
             'message' => 'Projects retrieved successfully',
