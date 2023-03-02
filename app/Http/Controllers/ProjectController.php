@@ -3,26 +3,26 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use \Illuminate\Http\JsonResponse;
+use Illuminate\Http\JsonResponse;
 use App\Models\Project;
 use Illuminate\Support\Facades\Validator;
 
 class ProjectController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the project.
      *
      * @return JsonResponse
      */
     public function getProjects(Request $request)
     {
-        $pageNumber=$request->query("page");
-        $perPage=$request->query("per_page");
-        if($pageNumber){
-            
-            $projects = Project::with('team.employees.employeeRole.role')->paginate($perPage||10, ['*'], 'page', $pageNumber);
-            }else{
-        $projects = Project::with('team.employees.employeeRole.role')->get();}
+        $pageNumber = $request->query('page');
+        $perPage = $request->query('per_page');
+        if ($pageNumber) {
+            $projects = Project::with('team.employees.employeeRole.role')->paginate($perPage?:10, ['*'], 'page', $pageNumber);
+        } else {
+            $projects = Project::with('team.employees.employeeRole.role')->get();
+        }
 
         return response()->json([
             'message' => 'Projects retrieved successfully',
@@ -31,7 +31,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified project.
      *
      * @param  int  $id
      * @return JsonResponse
@@ -81,7 +81,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created project in database.
      *
      * @param Request $request
      * @return JsonResponse
@@ -89,32 +89,24 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'finished' => 'boolean:default false',
-            'team_id' => 'nullable|exists:teams,id',
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'finished' => ['boolean'],
+            'team_id' => ['nullable', 'exists:teams,id'],
         ]);
-
+    
         if ($validator->fails()) {
-            return response()->json(
-                [
-                    'message' => 'Validation error',
-                    'errors' => $validator->errors(),
-                ],
-                422,
-            );
+            return response()->json(['errors' => $validator->errors()], 422);
         }
-
+    
         $project = Project::create($validator->validated());
-
-        return response()->json([
-            'message' => 'Project created successfully',
-            'project' => $project,
-        ]);
+    
+        return response()->json(['project' => $project]);
     }
+    
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified project in database.
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
@@ -128,38 +120,25 @@ class ProjectController extends Controller
             'finished' => 'nullable|boolean',
             'team_id' => 'nullable|exists:teams,id',
         ]);
-
+    
         if ($validator->fails()) {
-            return response()->json(
-                [
-                    'message' => 'Validation error',
-                    'errors' => $validator->errors(),
-                ],
-                422,
-            );
+            return response()->json(['errors' => $validator->errors()], 422);
         }
-
+    
         $project = Project::find($id);
-
+    
         if (!$project) {
-            return response()->json(
-                [
-                    'message' => 'Project not found',
-                ],
-                404,
-            );
+            return response()->json(['message' => 'Project not found'], 404);
         }
-
+    
         $project->update($validator->validated());
-
-        return response()->json([
-            'message' => 'Project updated successfully',
-            'project' => $project,
-        ]);
+    
+        return response()->json(['project' => $project]);
     }
+    
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified project from database.
      *
      * @param  int  $id
      * @return JsonResponse
@@ -168,19 +147,11 @@ class ProjectController extends Controller
     {
         $project = Project::find($id);
 
-        if (!$project) {
-            return response()->json(
-                [
-                    'message' => 'Project not found',
-                ],
-                404,
-            );
+        if ($project) {
+            $project->delete();
+            return response()->json(['message' => 'Project deleted successfully']);
+        } else {
+            return response()->json(['message' => 'Project not found'], 404);
         }
-
-        $project->delete();
-
-        return response()->json([
-            'message' => 'Project deleted successfully',
-        ]);
     }
 }

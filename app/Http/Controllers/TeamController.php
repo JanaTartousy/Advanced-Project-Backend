@@ -8,15 +8,28 @@ use Illuminate\Support\Facades\Validator;
 
 class TeamController extends Controller
 {
-    public function getTeams()
-    {
-        $teams = Team::with('employees')->get();
+    /**
+     * Display a listing of the team.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getTeams(Request $request)
+    {   $page=$request->query('page');
+        $perPage = $request->query('per_page');
+        $teams = Team::with('employees')->paginate($perPage ?: 10,['*'],'page',$page);
         return response()->json([
             'success' => true,
             'teams' => $teams,
         ]);
     }
 
+    /**
+     * Display the specified team.
+     *
+     * @param  int  $id
+     * @return JsonResponse
+     */
     public function getTeam($id)
     {
         $team = Team::with('employees')->find($id);
@@ -36,12 +49,22 @@ class TeamController extends Controller
             'team' => $team,
         ]);
     }
-
+    /**
+     * Store a newly created team in database.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function create()
     {
         return view('teams.create');
     }
-
+    /**
+     * Store a newly created team in database.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -70,7 +93,13 @@ class TeamController extends Controller
     {
         return view('teams.edit', compact('team'));
     }
-
+    /**
+     * Update the specified team in database.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
     public function update(Request $request, $id)
     {
         $team = Team::find($id);
@@ -107,7 +136,12 @@ class TeamController extends Controller
             'team' => $team,
         ]);
     }
-
+    /**
+     * Remove the specified team from database.
+     *
+     * @param  int  $id
+     * @return JsonResponse
+     */
     public function destroy($id)
     {
         $team = Team::find($id);
