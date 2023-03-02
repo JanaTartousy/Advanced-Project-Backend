@@ -10,7 +10,13 @@ use Illuminate\Support\Facades\Validator;
 
 class EvaluationController extends Controller
 {
-
+    
+      /**
+     * Add a newly created evaluation in storage.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function AddEvaluation(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -40,7 +46,13 @@ class EvaluationController extends Controller
             'Evaluation' => $evaluation,
         ]);
     }
-
+    
+    /**
+     * Remove the specified evaluation from storage.
+     *
+     * @param  int  $id
+     * @return JsonResponse
+     */
     public function deleteEvaluation($id)
     {
         try {
@@ -89,6 +101,15 @@ class EvaluationController extends Controller
         //         'message' => $e->getMessage()
         //     ], 500);
         // }
+
+         /**
+     * Update the specified evaluation in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
+
         $validator = Validator::make($request->all(), [
             'evaluation' => 'string|max:255',
             'date_evaluated' => 'date',
@@ -116,7 +137,11 @@ class EvaluationController extends Controller
         ]);
     }
     
-
+    /**
+     * Display a listing of the evaluations.
+     *
+     * @return JsonResponse
+     */
     public function getAllEvaluations()
     {
         try {
@@ -127,7 +152,12 @@ class EvaluationController extends Controller
         }
     }
 
-
+     /**
+     * Display the specified evaluation.
+     *
+     * @param  int  $id
+     * @return JsonResponse
+     */
     public function getEvaluationById($id)
     {
         try {
