@@ -7,7 +7,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\RoleController;
 
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\EmployeeRoleController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TeamController;
@@ -24,15 +24,14 @@ use App\Http\Controllers\EvaluationController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::middleware('auth:')->get('/user',[UserController::class, 'getAllUsers'] );
+// Route::get('/user', [UserController::class, 'getAllUsers']);
 
-Route::Post('/kpi', [KpiController::class, 'AddKpi']);
-Route::Get('/kpi', [KpiController::class, 'getAll']);
-Route::Get('/kpi/{id}', [KpiController::class, 'getKpi']);
-Route::Delete('/kpi/{id}', [KpiController::class, 'deleteKpi']);
-Route::Patch('/kpi/{id}', [KpiController::class, 'editKpi']);
+Route::post('/kpi', [KpiController::class, 'AddKpi']);
+Route::get('/kpi', [KpiController::class, 'getAll']);
+Route::get('/kpi/{id}', [KpiController::class, 'getKpi']);
+Route::delete('/kpi/{id}', [KpiController::class, 'deleteKpi']);
+Route::patch('/kpi/{id}', [KpiController::class, 'editKpi']);
 
 // Route::Post('/kpi', [KPIController::class, 'AddKpi']);
 // Route::Get('/kpi', [KPIController::class, 'getAll']);
@@ -57,16 +56,26 @@ Route::delete('/employees/{id}', [EmployeeController::class, 'destroy']);
 Route::get('/roles', [RoleController::class, 'getRoles']);
 Route::get('/roles/{id}', [RoleController::class, 'getRole']);
 Route::post('/roles', [RoleController::class, 'store']);
-Route::patch('/roles/{id}', [\App\Http\Controllers\RoleController::class, 'update']);
+Route::patch('/roles/{id}', [RoleController::class, 'update']);
 Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
 
-Route::Post('/admin', [AdminController::class, 'addAdmin']);
-Route::Post('/login', [AdminController::class, 'login']);
-Route::Get('/logout', [AdminController::class, 'logout']);
-Route::Patch('/admin/{id}', [AdminController::class, 'editAdmin']);
-Route::delete('/admin/{id}', [AdminController::class, 'deleteAdmin']);
-Route::Get('/admin', [AdminController::class, 'getAllAdmins']);
-Route::Get('/admin/{id}', [AdminController::class, 'getAdminByID']);
+// Route::Post('/user', [UserController::class, 'addUser']);
+// Route::Post('/login', [UserController::class, 'login'])->name('login');;
+// Route::Get('/logout', [UserController::class, 'logout']);
+// Route::Patch('/user/{id}', [UserController::class, 'editUser']);
+// Route::delete('/user/{id}', [UserController::class, 'deleteUser']);
+// Route::Get('/user/{id}', [UserController::class, 'getUserByID']);
+
+// Route::group([
+//     'middleware' => 'api',
+//     'prefix' => 'auth'
+// ], function ($router) {
+
+// Route::post('/login', 'App\Http\Controllers\AuthController@login')->name('login');
+    Route::post('/login', [UserController::class, 'login'])->name('login');
+    Route::post('/register', [UserController::class, 'register']);
+    Route::post('/logout', [UserController::class, 'logout']);
+// });
 
 Route::Post('/report', [ReportController::class, 'addReport']);
 Route::Get('/report/{id}', [ReportController::class, 'getReportByID']);
