@@ -12,6 +12,7 @@ class ProjectController extends Controller
     /**
      * Display a listing of the project.
      *
+     * @param Request $request
      * @return JsonResponse
      */
     public function getProjects(Request $request)
@@ -117,7 +118,7 @@ class ProjectController extends Controller
     /**
      * Update the specified project in database.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id
      * @return JsonResponse
      */
