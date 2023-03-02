@@ -20,7 +20,7 @@ class ProjectController extends Controller
         $perPage=$request->query("per_page");
         if($pageNumber){
             
-            $projects = Project::with('team.employees.employeeRole.role')->paginate($perPage||10, ['*'], 'page', $pageNumber);
+            $projects = Project::with('team.employees.employeeRole.role')->paginate($perPage?:10, ['*'], 'page', $pageNumber);
             }else{
         $projects = Project::with('team.employees.employeeRole.role')->get();}
 
