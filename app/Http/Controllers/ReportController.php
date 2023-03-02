@@ -6,7 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\Report;
 
 class ReportController extends Controller
-{
+{   
+     /**
+     * Add a newly created report in storage.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+
     public function addReport(Request $request){
         $report = new Report();
         $file = $request->input('file');
@@ -16,13 +23,27 @@ class ReportController extends Controller
         return response()->json([
             'message' => 'Report added successfully'
         ]);
-    }
+    } 
+
+     /**
+     * Display a listing of the reports.
+     *
+     * @return JsonResponse
+     */ 
+
     public function getAllReports(Request $request){
         $reports = Report::all();
         return response()->json([
             'message' => $reports,
         ]);
     }
+    
+    /**
+     * Display the specified report.
+     *
+     * @param  int  $id
+     * @return JsonResponse
+     */ 
 
     public function getReportByID(Request $request, $id){
 
@@ -32,6 +53,13 @@ class ReportController extends Controller
             'message' => $report,
         ]); 
     }
+    
+      /**
+     * Remove the specified report from storage.
+     *
+     * @param  int  $id
+     * @return JsonResponse
+     */
 
     public function deleteReport(Request $request, $id){
          $report =  Report::find($id);

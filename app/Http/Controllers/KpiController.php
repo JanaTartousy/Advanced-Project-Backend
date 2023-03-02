@@ -7,6 +7,13 @@ use App\Models\Kpi;
 
 class KpiController extends Controller
 {
+
+     /**
+     * Add a newly created kpi in storage.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function AddKpi(Request $request){
 
     $kpi = new Kpi;
@@ -21,6 +28,11 @@ class KpiController extends Controller
     ]);
 }
 
+ /**
+     * Display a listing of the kpis.
+     *
+     * @return JsonResponse
+     */
 public function getAll()
 {
     try {
@@ -31,6 +43,13 @@ public function getAll()
     }
 }
 
+
+     /**
+     * Display the specified kpi.
+     *
+     * @param  int  $id
+     * @return JsonResponse
+     */
     public function getKpi(Request $request, $id){
 
     $kpi =  Kpi::where("id",$id)->get();
@@ -41,8 +60,28 @@ public function getAll()
 
 }
 
-    public function editKpi(Request $request, $id){
+    // public function editKpi(Request $request, $id){
 
+
+    //     $kpi =  Kpi::find($id);
+    //     $inputs = $request;
+    //     $kpi->update($inputs);
+
+    //     return response()->json([
+    //         'message' => "Kpi edited successfully!",
+    //          'kpi' => $kpi,
+    //     ]);
+
+    // }
+
+      /**
+     * Update the specified kpi in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function editKpi(Request $request, $id) {
         try {
             $kpi = kpi::find($id);
             $inputs = $request->except("_method");
@@ -54,13 +93,17 @@ public function getAll()
 
         } catch (\Exception $e) {
             return response()->json([
-                "kpi" => $e->$kpi
+                "message" => $e->message
             ]);
         }
     }
-
     
-
+    /**
+     * Remove the specified kpi from storage.
+     *
+     * @param  int  $id
+     * @return JsonResponse
+     */
     public function deleteKpi(Request $request, $id){
 
         $kpi =  Kpi::find($id);

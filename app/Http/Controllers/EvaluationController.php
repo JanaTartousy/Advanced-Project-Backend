@@ -10,7 +10,13 @@ use Illuminate\Support\Facades\Validator;
 
 class EvaluationController extends Controller
 {
-
+    
+      /**
+     * Add a newly created evaluation in storage.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function AddEvaluation(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -40,7 +46,13 @@ class EvaluationController extends Controller
             'Evaluation' => $evaluation,
         ]);
     }
-
+    
+    /**
+     * Remove the specified evaluation from storage.
+     *
+     * @param  int  $id
+     * @return JsonResponse
+     */
     public function deleteEvaluation($id)
     {
         try {
@@ -60,6 +72,45 @@ class EvaluationController extends Controller
 
     public function updateEvaluation(Request $request, $id)
     {
+
+        // try {
+        //     // find the evaluation record
+        //     $evaluations = Evaluation::find($id);
+        //     $validator=Validator::make($request->all(),[
+        //         'employee_id'=>'nullable|exists:employees,id',
+        //         'kpi_id'=>'nullable|exists:kpis,id',
+        //         'date_evaluated'=>'nullable|date',
+        //         'evaluation'=>'nullable|sting'
+        //     ]);
+        //     if($validator->fail()){
+        //         return response()->json([
+        //             'success'=>false,
+        //             'message'=> $validator->errors(),
+        //         ]);
+        //     }
+
+        //     $evaluations->update($validator->validated());
+
+        //     return response()->json([
+        //         'message' => 'Evaluation updated successfully',
+        //         'Evaluation'=>$evaluations
+        //     ]);
+
+        // } catch (\Exception $e) {
+        //     return response()->json([
+        //         'error' => 'Evaluation update failed',
+        //         'message' => $e->getMessage()
+        //     ], 500);
+        // }
+
+         /**
+     * Update the specified evaluation in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
+
         $validator = Validator::make($request->all(), [
             'evaluation' => 'string|max:255',
             'date_evaluated' => 'date',
@@ -87,7 +138,11 @@ class EvaluationController extends Controller
         ]);
     }
     
-
+    /**
+     * Display a listing of the evaluations.
+     *
+     * @return JsonResponse
+     */
     public function getAllEvaluations()
     {
         try {
@@ -98,7 +153,12 @@ class EvaluationController extends Controller
         }
     }
 
-
+     /**
+     * Display the specified evaluation.
+     *
+     * @param  int  $id
+     * @return JsonResponse
+     */
     public function getEvaluationById($id)
     {
         try {
