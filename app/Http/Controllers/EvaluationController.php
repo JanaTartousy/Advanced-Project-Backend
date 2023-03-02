@@ -143,10 +143,13 @@ class EvaluationController extends Controller
      *
      * @return JsonResponse
      */
-    public function getAllEvaluations()
-    {
+    public function getAllEvaluations(Request $request)
+    {   
+        $pageNumber=$request->query("page");
+        $perPage=$request->query("per_page");
+    
         try {
-            $evaluations = Evaluation::with(['employees', 'kpis'])->get();
+            $evaluations = Evaluation::with(['employees', 'kpis'])->get()->paginate($perPage?:2, ['*'], 'page', $pageNumber);
             return response()->json(['evaluations' => $evaluations], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Failed to retrieve evaluations.'], 500);

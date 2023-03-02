@@ -33,10 +33,13 @@ class KpiController extends Controller
      *
      * @return JsonResponse
      */
-public function getAll()
-{
+public function getAll(Request $request)
+{   
+    $pageNumber=$request->query("page");
+    $perPage=$request->query("per_page");
+
     try {
-        $kpis = Kpi::all();
+        $kpis = Kpi::paginate($perPage?:2, ['*'], 'page', $pageNumber);
         return response()->json($kpis, 200);
     } catch (\Exception $e) {
         return response()->json(['message' => 'Failed to retrieve KPIs.'], 500);
