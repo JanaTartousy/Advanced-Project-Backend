@@ -70,7 +70,7 @@ class EmployeeController extends Controller
 
     public function getEmployees()
     {
-        $employees = Employee::all();
+        $employees = Employee::with('team.projects')->get();
         return response()->json([
             'employees' => $employees,
         ]);

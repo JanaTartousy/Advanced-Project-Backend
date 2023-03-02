@@ -11,6 +11,9 @@ class EmployeeRole extends Model
     protected $fillable =[
         "employee_id","project_id","role_id",
     ];
+    public function team(){
+        return $this ->belongsTo(Team::class);
+    }
 
     public function employees()
     {

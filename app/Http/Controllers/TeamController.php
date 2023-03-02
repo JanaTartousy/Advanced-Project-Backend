@@ -15,9 +15,9 @@ class TeamController extends Controller
      * @return JsonResponse
      */
     public function getTeams(Request $request)
-    {   $page=$request->query('page');
+    {
         $perPage = $request->query('per_page');
-        $teams = Team::with('employees')->paginate($perPage ?: 10,['*'],'page',$page);
+        $teams = Team::with('employees')->paginate($perPage ?: 10);
         return response()->json([
             'success' => true,
             'teams' => $teams,
@@ -159,4 +159,5 @@ class TeamController extends Controller
             'message' => 'Team deleted successfully',
         ]);
     }
+    
 }

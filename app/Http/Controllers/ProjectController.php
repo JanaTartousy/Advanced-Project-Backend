@@ -16,13 +16,23 @@ class ProjectController extends Controller
      */
     public function getProjects(Request $request)
     {
-        $pageNumber = $request->query('page');
         $perPage = $request->query('per_page');
-        if ($pageNumber) {
-            $projects = Project::with('team.employees.employeeRole.role')->paginate($perPage?:10, ['*'], 'page', $pageNumber);
-        } else {
-            $projects = Project::with('team.employees.employeeRole.role')->get();
+
+        if($name=$request->query('search')){
+        $project = Project::where('name', 'LIKE', '%' . $name . '%')->paginate($perPage ?: 20);;
+
+        if (!$project) {
+            return response()->json(['message' => 'Project not found'], 404);
         }
+        return response()->json([
+            'message' => 'Projects retrieved successfully',
+            'projects' => $project,
+        ]);
+    }
+        
+            
+        $projects = Project::with('team.employees.employeeRole.role')->paginate($perPage ?: 20);
+        
 
         return response()->json([
             'message' => 'Projects retrieved successfully',
@@ -94,16 +104,15 @@ class ProjectController extends Controller
             'finished' => ['boolean'],
             'team_id' => ['nullable', 'exists:teams,id'],
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-    
+
         $project = Project::create($validator->validated());
-    
+
         return response()->json(['project' => $project]);
     }
-    
 
     /**
      * Update the specified project in database.
@@ -120,22 +129,21 @@ class ProjectController extends Controller
             'finished' => 'nullable|boolean',
             'team_id' => 'nullable|exists:teams,id',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-    
+
         $project = Project::find($id);
-    
+
         if (!$project) {
             return response()->json(['message' => 'Project not found'], 404);
         }
-    
+
         $project->update($validator->validated());
-    
+
         return response()->json(['project' => $project]);
     }
-    
 
     /**
      * Remove the specified project from database.
@@ -154,4 +162,5 @@ class ProjectController extends Controller
             return response()->json(['message' => 'Project not found'], 404);
         }
     }
+
 }

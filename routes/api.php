@@ -44,9 +44,9 @@ Route::Patch('/kpi/{id}', [KpiController::class, 'editKpi']);
 
 Route::get('/projects', [ProjectController::class, 'getProjects']);
 Route::post('/projects', [ProjectController::class, 'store']);
-Route::get('/project/{id}', [ProjectController::class, 'getProject']);
-Route::patch('/project/{id}', [ProjectController::class, 'update']);
-Route::post('/project/{id}', [ProjectController::class, 'destroy']);
+Route::get('/projects/{id}', [ProjectController::class, 'getProject']);
+Route::patch('/projects/{id}', [ProjectController::class, 'update']);
+Route::post('/projects/{id}', [ProjectController::class, 'destroy']);
 
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::get('/employees', [EmployeeController::class, 'getEmployees']);
