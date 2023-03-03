@@ -7,12 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Kpi extends Model
 {
+// the content of table : Kpis , in databse.
 
     use HasFactory;
     protected $fillable = [
         "name",
         "description"
     ];
+    // Relation between the tables : Evaluation and Kpis.
+
     public function evaluation(){
         return $this -> hasMany(Evaluation::class);
     }

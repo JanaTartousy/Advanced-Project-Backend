@@ -9,6 +9,8 @@ use App\Models\Admin;
 
 class AdminController extends Controller
 {
+    // Add a new Admin in database.
+
     public function addAdmin(Request $request){
 
         // validator(request()->all(), [
@@ -32,12 +34,16 @@ class AdminController extends Controller
         ]);
     }
 
+    // Display a list of the Admins in the database.
+
     public function getAllAdmins(Request $request){
         $admins = Admin::all();
         return response()->json([
             'message' => $admins,
         ]);
     }
+
+    // Display a specific Admin.
 
     public function getAdminByID(Request $request, $id){
 
@@ -47,6 +53,8 @@ class AdminController extends Controller
             'message' => $admin,
         ]);
     }
+    // Update the specified Admin in database.
+
     public function editAdmin(Request $request, $id){
         $admin  = Admin::find($id);
         $inputs = $request->except('password','_method');
@@ -60,6 +68,8 @@ class AdminController extends Controller
            'updates' => $admin,
         ]);
     }
+    //  Remove the specified Admin from database.
+
     public function deleteAdmin(Request $request, $id){
         $admin =  Admin::find($id);
         $admin->delete();
@@ -67,6 +77,8 @@ class AdminController extends Controller
            'message' => 'Admin Deleted Successfully'
         ]);
     }
+    // Login Admin (authentication).
+
     public function login(Request $request){
         if (auth()->attempt(request()->only(['email', 'password']))) {
             return response()->json([
@@ -79,6 +91,8 @@ class AdminController extends Controller
             ]); 
         }
     }
+    // Logout from Admin (authentication).
+
     public function logout(){
         auth()->logout();
         return response()->json([

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Admin extends Model
 {
     use HasFactory;
+// The content of table : Admins , in databse.
 
     protected $fillable = [
         'first_name',

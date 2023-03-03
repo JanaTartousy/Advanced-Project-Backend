@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 
 class EmployeeController extends Controller
 {
+    // Add a newly created Employee in database.
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -50,6 +52,8 @@ class EmployeeController extends Controller
         ]);
     }
     
+    // Display a specific Employee.
+
     public function getEmployee($id)
 {
     $employee = Employee::find($id);
@@ -67,6 +71,7 @@ class EmployeeController extends Controller
         'employee' => $employee,
     ]);
 }
+// Display list of all Employees.
 
     public function getEmployees()
     {
@@ -76,7 +81,8 @@ class EmployeeController extends Controller
         ]);
     }
 
-    
+ // Update the specific Employee.
+
 public function update(Request $request, $id)
 {
     $validator = Validator::make($request->all(), [
@@ -117,6 +123,7 @@ public function update(Request $request, $id)
         'employee' => $employee,
     ]);
 }
+// Remove a specific Employee.
 
     public function delete($id)
     {

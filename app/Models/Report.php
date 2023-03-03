@@ -9,6 +9,7 @@ class Report extends Model
 {
     use HasFactory;
 
+// The cintent of reports, in databse.
 
      protected $fillable = [
         'file',
