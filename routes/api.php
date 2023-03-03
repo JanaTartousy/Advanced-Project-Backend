@@ -23,81 +23,70 @@ use App\Http\Controllers\EvaluationController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::post('/login', [UserController::class, 'login']);
+Route::middleware(['authorize'])->group(function () {
 
-
-// Route::get('/user', [UserController::class, 'getAllUsers']);
-
-Route::post('/kpi', [KpiController::class, 'AddKpi']);
-Route::get('/kpi', [KpiController::class, 'getAll']);
-Route::get('/kpi/{id}', [KpiController::class, 'getKpi']);
-Route::delete('/kpi/{id}', [KpiController::class, 'deleteKpi']);
-Route::patch('/kpi/{id}', [KpiController::class, 'editKpi']);
-
-// Route::Post('/kpi', [KPIController::class, 'AddKpi']);
-// Route::Get('/kpi', [KPIController::class, 'getAll']);
-// Route::Get('/kpi/{id}', [KPIController::class, 'getKpi']);
-// Route::Delete('/kpi/{id}', [KPIController::class, 'deleteKpi']);
-// Route::Patch('/kpi/{id}', [KPIController::class, 'editKpi']);
-
-
-
-Route::get('/projects', [ProjectController::class, 'getProjects']);
-Route::post('/projects', [ProjectController::class, 'store']);
-Route::get('/projects/{id}', [ProjectController::class, 'getProject']);
-Route::patch('/projects/{id}', [ProjectController::class, 'update']);
-Route::post('/projects/{id}', [ProjectController::class, 'destroy']);
-
-Route::post('/employees', [EmployeeController::class, 'store']);
-Route::get('/employees', [EmployeeController::class, 'getEmployees']);
-Route::get('/employees/{id}', [EmployeeController::class, 'getEmployee']);
-Route::patch('/employees/{id}', [EmployeeController::class, 'update']);
-Route::delete('/employees/{id}', [EmployeeController::class, 'destroy']);
-
-Route::get('/roles', [RoleController::class, 'getRoles']);
-Route::get('/roles/{id}', [RoleController::class, 'getRole']);
-Route::post('/roles', [RoleController::class, 'store']);
-Route::patch('/roles/{id}', [RoleController::class, 'update']);
-Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
-
-// Route::Post('/user', [UserController::class, 'addUser']);
-// Route::Post('/login', [UserController::class, 'login'])->name('login');;
-// Route::Get('/logout', [UserController::class, 'logout']);
-
-
-
-Route::group([
-    'middleware' => 'api',
-    'prefix' => 'auth'
-], function ($router) {
-    Route::get('/user',[UserController::class, 'getAllUsers'] );
-    Route::get('/user/{id}',[UserController::class, 'getUserByID'] );
-    Route::post('/register', [UserController::class, 'register']);
-    Route::post('/login', [UserController::class, 'login']);
-    Route::post('/logout', [UserController::class, 'logout']);
+    //Routes for KPIs
+    Route::post('/kpi', [KpiController::class, 'AddKpi']);
+    Route::get('/kpi', [KpiController::class, 'getAll']);
+    Route::get('/kpi/{id}', [KpiController::class, 'getKpi']);
+    Route::delete('/kpi/{id}', [KpiController::class, 'deleteKpi']);
     Route::patch('/user/{id}', [UserController::class, 'editUser']);
+    Route::patch('/kpi/{id}', [KpiController::class, 'editKpi']);
+
+    //Routes for users
+    Route::get('/user/{id}', [UserController::class, 'getUserByID']);
+    Route::post('/logout', [UserController::class, 'logout']);
     Route::delete('/user/{id}', [UserController::class, 'deleteUser']);
+    Route::get('/user', [UserController::class, 'getAllUsers']);
+    Route::post('/register', [UserController::class, 'register']);
+
+    //Routes for reports
+    Route::Post('/report', [ReportController::class, 'addReport']);
+    Route::Get('/report/{id}', [ReportController::class, 'getReportByID']);
+    Route::Get('/report', [ReportController::class, 'getAllReports']);
+    Route::Post('/report', [ReportController::class, 'addReport']);
+    Route::Delete('/report', [ReportController::class, 'deleteReport']);
+
+    //Routes for teams
+    Route::get('/teams', [TeamController::class, 'getTeams']);
+    Route::get('/teams/{id}', [TeamController::class, 'getTeam']);
+    Route::post('/teams', [TeamController::class, 'store']);
+    Route::patch('/teams/{id}', [TeamController::class, 'update']);
+    Route::delete('/teams/{id}', [TeamController::class, 'destroy']);
+
+    //Routes for employeeRoles in a project
+    Route::get('/employeerole', [EmployeeRoleController::class, 'get']);
+    Route::get('/employeerole/{id}', [EmployeeRoleController::class, 'destroy']);
+    Route::patch('/employeerole/{id}', [EmployeeRoleController::class, 'destroy']);
+    Route::post('/employeerole', [EmployeeRoleController::class, 'assignRole']);
+    Route::delete('/employeerole/{id}', [EmployeeRoleController::class, 'destroy']);
+
+    //Routes for evaluations
+    Route::Post('/evaluations', [EvaluationController::class, 'AddEvaluation']);
+    Route::Get('/evaluations', [EvaluationController::class, 'getAllEvaluations']);
+    Route::Get('/evaluations/{id}', [EvaluationController::class, 'getEvaluationById']);
+    Route::Patch('/evaluations/{id}', [EvaluationController::class, 'updateEvaluation']);
+    Route::Delete('/evaluations/{id}', [EvaluationController::class, 'deleteEvaluation']);
+
+    //Routes for projects
+    Route::get('/projects', [ProjectController::class, 'getProjects']);
+    Route::post('/projects', [ProjectController::class, 'store']);
+    Route::get('/projects/{id}', [ProjectController::class, 'getProject']);
+    Route::patch('/projects/{id}', [ProjectController::class, 'update']);
+    Route::post('/projects/{id}', [ProjectController::class, 'destroy']);
+
+    //Routes for employees
+    Route::post('/employees', [EmployeeController::class, 'store']);
+    Route::get('/employees', [EmployeeController::class, 'getEmployees']);
+    Route::get('/employees/{id}', [EmployeeController::class, 'getEmployee']);
+    Route::patch('/employees/{id}', [EmployeeController::class, 'update']);
+    Route::delete('/employees/{id}', [EmployeeController::class, 'destroy']);
+
+    //Routes for roles
+    Route::get('/roles', [RoleController::class, 'getRoles']);
+    Route::get('/roles/{id}', [RoleController::class, 'getRole']);
+    Route::post('/roles', [RoleController::class, 'store']);
+    Route::patch('/roles/{id}', [RoleController::class, 'update']);
+    Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
 });
-
-Route::Post('/report', [ReportController::class, 'addReport']);
-Route::Get('/report/{id}', [ReportController::class, 'getReportByID']);
-Route::Get('/report', [ReportController::class, 'getAllReports']);
-Route::Post('/report', [ReportController::class, 'addReport']);
-Route::Delete('/report', [ReportController::class, 'deleteReport']);
-
-Route::get('/teams', [TeamController::class, 'getTeams']);
-Route::get('/teams/{id}', [TeamController::class, 'getTeam']);
-Route::post('/teams', [TeamController::class, 'store']);
-Route::patch('/teams/{id}', [TeamController::class, 'update']);
-Route::delete('/teams/{id}', [TeamController::class, 'destroy']);
-
-Route::get('/employeerole', [EmployeeRoleController::class, 'get']);
-Route::get('/employeerole/{id}', [EmployeeRoleController::class, 'destroy']);
-Route::patch('/employeerole/{id}', [EmployeeRoleController::class, 'destroy']);
-Route::post('/employeerole', [EmployeeRoleController::class, 'assignRole']);
-Route::delete('/employeerole/{id}', [EmployeeRoleController::class, 'destroy']);
-
-Route::Post('/evaluations', [EvaluationController::class, 'AddEvaluation']);
-Route::Get('/evaluations', [EvaluationController::class, 'getAllEvaluations']);
-Route::Get('/evaluations/{id}', [EvaluationController::class, 'getEvaluationById']);
-Route::Patch('/evaluations/{id}', [EvaluationController::class, 'updateEvaluation']);
-Route::Delete('/evaluations/{id}', [EvaluationController::class, 'deleteEvaluation']);

@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Validator;
+use Illuminate\Support\Facades\Validator;
+
 
 
 class UserController extends Controller
@@ -30,18 +31,10 @@ class UserController extends Controller
     public function editUser(Request $request, $id){
         $user  = User::find($id);
         $inputs = $request->except('password','_method');
-        // $validator = Validator::make($request->all(), [
-        //     'email' => 'string|email|max:100|unique:users',
-        //     'name'=>'string',
-        //     'password' => 'string|min:6',
-        // ]);
-        // if($validator->fails()){
-        //     return response()->json($validator->errors()->toJson(), 400);
-        // }
         $user->update($inputs);
         if ($request->has('password')) {
             $password =  bcrypt($request->password);
-            $admin->update(['password' => bcrypt($password)]);
+            $user->update(['password' => bcrypt($password)]);
         }
         return response()->json([
             'message' => 'User successfully created',
@@ -55,25 +48,6 @@ class UserController extends Controller
            'message' => 'User Deleted Successfully'
         ]);
     }
-    // public function login(Request $request){
-    //     if (auth()->attempt(request()->only(['email', 'password']))) {
-    //         return response()->json([
-    //            'message' => 'Logged In Successfully'
-    //         ]);
-    //     }
-    //     else {
-    //         return response()->json([
-    //           'message' => 'Invalid Credentials'
-    //         ]); 
-    //     }
-    // }
-    // public function logout(){
-    //     auth()->logout();
-    //     return response()->json([
-    //        'message' => 'Logged Out Successfully'
-    //     ]);
-    // }
-
 
     /**
      * Create a new AuthController instance.
