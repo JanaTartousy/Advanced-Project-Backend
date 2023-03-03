@@ -21,7 +21,7 @@ class EmployeeRole extends Model
     }
     public function projects()
     {
-        return $this->hasMany(Project::class);
+        return $this->belongsTo(Project::class);
     }
     public function role()
     {
