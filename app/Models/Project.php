@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     use HasFactory;
+// The content of table : projects , in databse.
 
     protected $fillable = [
         "name",
@@ -19,11 +20,13 @@ class Project extends Model
     protected $casts = [
         'finished' => 'boolean',
     ];
+// Relation between the tables : teams and projects.
 
     public function team()
     {
         return $this->belongsTo(Team::class);
     }
+// Relation between the tables :projects and projects_employee_role.
 
     public function employeeRole()
     {

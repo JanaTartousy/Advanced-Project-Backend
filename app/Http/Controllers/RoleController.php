@@ -7,6 +7,8 @@ use App\Models\Role;
 
 class RoleController extends Controller
 {
+    // Display a list of Roles.
+    
     public function getRoles()
     {
         $roles = Role::all();
@@ -15,6 +17,7 @@ class RoleController extends Controller
             'roles' => $roles,
         ]);
     }
+// Create a newly Role project in database.
 
     public function create()
     {
@@ -33,6 +36,7 @@ class RoleController extends Controller
             'role' => $role,
         ]);
     }
+// Dipslay a specific Role.
 
     public function getRole($id)
     {
@@ -47,7 +51,7 @@ class RoleController extends Controller
             'role' => $role,
         ]);
     }
-
+// Update a specific Role in database.
     public function edit(Role $role)
     {
         return view('roles.edit', compact('role'));
@@ -78,6 +82,7 @@ class RoleController extends Controller
             'role' => $role,
         ]);
     }
+// Remove a specific Role in database.
 
     public function destroy($id)
     {

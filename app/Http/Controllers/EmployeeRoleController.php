@@ -8,6 +8,8 @@ use App\Models\EmployeeRole;
 
 class EmployeeRoleController extends Controller
 {
+    // Display list of all elemnts between the relation in the three tables (Roles,Emplyees,Projects).
+
     public function getRoles()
     {
         $roles = EmployeeRole::get();
@@ -17,6 +19,7 @@ class EmployeeRoleController extends Controller
             'roles' => $roles,
         ]);
     }
+// Display list of a specific elemnts between the relation in the three tables (Roles,Emplyees,Projects).
 
     public function assignRole(Request $request)
     {
@@ -43,6 +46,7 @@ class EmployeeRoleController extends Controller
             'employee_role' => $employeeRole,
         ]);
     }
+//  Update the specific elemnts between the relation in the three tables (Roles,Emplyees,Projects).
 
     public function updateRole(Request $request, $id)
     {
@@ -80,6 +84,7 @@ class EmployeeRoleController extends Controller
             'employee_role' => $employeeRole,
         ]);
     }
+// Remove the specific elemnts between the relation in the three tables (Roles,Emplyees,Projects).
 
     public function deleteRole($id)
     {
