@@ -24,7 +24,7 @@ use App\Http\Controllers\EvaluationController;
 |
 */
 
-Route::middleware('auth:')->get('/user',[UserController::class, 'getAllUsers'] );
+
 // Route::get('/user', [UserController::class, 'getAllUsers']);
 
 Route::post('/kpi', [KpiController::class, 'AddKpi']);
@@ -62,20 +62,21 @@ Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
 // Route::Post('/user', [UserController::class, 'addUser']);
 // Route::Post('/login', [UserController::class, 'login'])->name('login');;
 // Route::Get('/logout', [UserController::class, 'logout']);
-// Route::Patch('/user/{id}', [UserController::class, 'editUser']);
-// Route::delete('/user/{id}', [UserController::class, 'deleteUser']);
-// Route::Get('/user/{id}', [UserController::class, 'getUserByID']);
 
-// Route::group([
-//     'middleware' => 'api',
-//     'prefix' => 'auth'
-// ], function ($router) {
 
-// Route::post('/login', 'App\Http\Controllers\AuthController@login')->name('login');
-    Route::post('/login', [UserController::class, 'login'])->name('login');
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth'
+], function ($router) {
+    Route::get('/user',[UserController::class, 'getAllUsers'] );
+    Route::get('/user/{id}',[UserController::class, 'getUserByID'] );
     Route::post('/register', [UserController::class, 'register']);
+    Route::post('/login', [UserController::class, 'login']);
     Route::post('/logout', [UserController::class, 'logout']);
-// });
+    Route::patch('/user/{id}', [UserController::class, 'editUser']);
+    Route::delete('/user/{id}', [UserController::class, 'deleteUser']);
+});
 
 Route::Post('/report', [ReportController::class, 'addReport']);
 Route::Get('/report/{id}', [ReportController::class, 'getReportByID']);

@@ -30,14 +30,23 @@ class UserController extends Controller
     public function editUser(Request $request, $id){
         $user  = User::find($id);
         $inputs = $request->except('password','_method');
+        // $validator = Validator::make($request->all(), [
+        //     'email' => 'string|email|max:100|unique:users',
+        //     'name'=>'string',
+        //     'password' => 'string|min:6',
+        // ]);
+        // if($validator->fails()){
+        //     return response()->json($validator->errors()->toJson(), 400);
+        // }
         $user->update($inputs);
         if ($request->has('password')) {
-            $user->update(['password' => bcrypt($request->password)]);
+            $password =  bcrypt($request->password);
+            $admin->update(['password' => bcrypt($password)]);
         }
         return response()->json([
-           'message' => 'User Updated Successfully',
-           'updates' => $user,
-        ]);
+            'message' => 'User successfully created',
+            'user' => $user
+        ], 201);
     }
     public function deleteUser(Request $request, $id){
         $user =  User::find($id);
@@ -91,7 +100,7 @@ class UserController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
         return $this->createNewToken($token);
-    }
+    }   
     /**
      * Register a user.
      *
