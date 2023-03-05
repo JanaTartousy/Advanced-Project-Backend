@@ -39,8 +39,23 @@ public function getAll(Request $request)
     $perPage=$request->query("per_page");
 
     try {
-        $kpis = Kpi::paginate($perPage?:2, ['*'], 'page', $pageNumber);
-        return response()->json($kpis, 200);
+        if($name=$request->query('search')){
+        $kpi = Kpi::where('name', 'LIKE', '%' . $name . '%')->paginate($perPage ?: 20);;
+
+        if (!$kpi) {
+            return response()->json(['message' => 'Kpi not found'], 404);
+        }
+        return response()->json([
+            'message' => 'kpi retrive successfully',
+            'kpis' => $kpi,
+        ]);
+    }
+    $kpis = Kpi::paginate($perPage ?: 20);
+
+        return response()->json([
+            'message' => 'Kpis retrieved successfully',
+            'kpis' => $kpis,
+        ]);
     } catch (\Exception $e) {
         return response()->json(['message' => 'Failed to retrieve KPIs.'], 500);
     }
@@ -62,22 +77,7 @@ public function getAll(Request $request)
     ]);
 
 }
-
-    // public function editKpi(Request $request, $id){
-
-
-    //     $kpi =  Kpi::find($id);
-    //     $inputs = $request;
-    //     $kpi->update($inputs);
-
-    //     return response()->json([
-    //         'message' => "Kpi edited successfully!",
-    //          'kpi' => $kpi,
-    //     ]);
-
-    // }
-
-      /**
+  /**
      * Update the specified kpi in storage.
      *
      * @param \Illuminate\Http\Request $request
