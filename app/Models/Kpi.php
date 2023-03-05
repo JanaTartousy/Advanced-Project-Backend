@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Kpi extends Model
 {
-// the content of table : Kpis , in databse.
+// the content of table : Kpis , in database.
 
     use HasFactory;
     protected $fillable = [

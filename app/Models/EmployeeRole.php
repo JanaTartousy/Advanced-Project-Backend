@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class EmployeeRole extends Model
 {
     use HasFactory;
-    // The content of table : projects_employee_role, in databse.
+    // The content of table : projects_employee_role, in database.
 
     protected $fillable =[
         "employee_id","project_id","role_id",

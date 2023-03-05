@@ -9,7 +9,7 @@ class Report extends Model
 {
     use HasFactory;
 
-// The cintent of reports, in databse.
+// The content of reports, in database.
 
      protected $fillable = [
         'file',

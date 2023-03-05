@@ -31,7 +31,7 @@ class ReportController extends Controller
      * @return JsonResponse
      */ 
 
-    public function getAllReports(Request $request){
+    public function getAllReports(){
         $reports = Report::all();
         return response()->json([
             'message' => $reports,
@@ -45,7 +45,7 @@ class ReportController extends Controller
      * @return JsonResponse
      */ 
 
-    public function getReportByID(Request $request, $id){
+    public function getReportByID($id){
 
         $report =  Report::find($id);
 
@@ -61,7 +61,7 @@ class ReportController extends Controller
      * @return JsonResponse
      */
 
-    public function deleteReport(Request $request, $id){
+    public function deleteReport($id){
          $report =  Report::find($id);
          $report->delete();
          return response()->json([

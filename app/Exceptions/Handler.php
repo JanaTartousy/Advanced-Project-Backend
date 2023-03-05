@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -44,6 +46,22 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+    public function render($request, Throwable $exception)
+    {
+
+                 // handle 404 Not Found errors
+                 if ($exception instanceof NotFoundHttpException) {
+                    return response()->json(['error' => 'Resource not found'], 404);
+                }
+    
+                // handle 400 Bad Request errors
+                if ($exception instanceof HttpException && $exception->getStatusCode() == 400) {
+                    return response()->json(['error' => 'Bad request'], 400);
+                }
+    
+                // handle other errors
+                return response()->json(['error' => $exception->getMessage()], 500);
     }
 
 }

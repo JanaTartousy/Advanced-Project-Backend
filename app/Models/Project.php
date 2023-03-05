@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     use HasFactory;
-// The content of table : projects , in databse.
+// The content of table : projects , in database.
 
     protected $fillable = [
         "name",

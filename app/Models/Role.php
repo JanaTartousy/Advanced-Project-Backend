@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Role extends Model
 {
     use HasFactory;
-// The content of table : roles, in databse.
+// The content of table : roles, in database.
 
     protected $fillable = [
         "name"

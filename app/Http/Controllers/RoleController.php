@@ -36,7 +36,7 @@ class RoleController extends Controller
             'role' => $role,
         ]);
     }
-// Dipslay a specific Role.
+// Display a specific Role.
 
     public function getRole($id)
     {

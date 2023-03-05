@@ -96,7 +96,7 @@ public function getAll(Request $request)
 
         } catch (\Exception $e) {
             return response()->json([
-                "message" => $e->message
+                "message" => $e
             ]);
         }
     }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Team extends Model
 {
     use HasFactory;
-// The content of table : teams , in databse.
+// The content of table : teams , in database.
 
     protected $fillable = [
         "name"
