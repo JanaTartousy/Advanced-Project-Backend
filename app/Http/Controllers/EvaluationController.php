@@ -69,49 +69,17 @@ class EvaluationController extends Controller
         }
     }
 
-
-    public function updateEvaluation(Request $request, $id)
-    {
-
-        // try {
-        //     // find the evaluation record
-        //     $evaluations = Evaluation::find($id);
-        //     $validator=Validator::make($request->all(),[
-        //         'employee_id'=>'nullable|exists:employees,id',
-        //         'kpi_id'=>'nullable|exists:kpis,id',
-        //         'date_evaluated'=>'nullable|date',
-        //         'evaluation'=>'nullable|sting'
-        //     ]);
-        //     if($validator->fail()){
-        //         return response()->json([
-        //             'success'=>false,
-        //             'message'=> $validator->errors(),
-        //         ]);
-        //     }
-
-        //     $evaluations->update($validator->validated());
-
-        //     return response()->json([
-        //         'message' => 'Evaluation updated successfully',
-        //         'Evaluation'=>$evaluations
-        //     ]);
-
-        // } catch (\Exception $e) {
-        //     return response()->json([
-        //         'error' => 'Evaluation update failed',
-        //         'message' => $e->getMessage()
-        //     ], 500);
-        // }
-
-         /**
+     /**
      * Update the specified evaluation in storage.
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
      * @return JsonResponse
      */
+    public function updateEvaluation(Request $request, $id)
+    {
 
-        $validator = Validator::make($request->all(), [
+            $validator = Validator::make($request->all(), [
             'evaluation' => 'string|max:255',
             'date_evaluated' => 'date',
             'employee_id' => 'exists:employees,id',
@@ -143,19 +111,40 @@ class EvaluationController extends Controller
      *
      * @return JsonResponse
      */
-    public function getAllEvaluations(Request $request)
-    {   
-        $pageNumber=$request->query("page");
-        $perPage=$request->query("per_page");
-    
-        try {
-            $evaluations = Evaluation::with(['employees', 'kpis'])->get()->paginate($perPage?:2, ['*'], 'page', $pageNumber);
-            return response()->json(['evaluations' => $evaluations], 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to retrieve evaluations.'], 500);
-        }
-    }
 
+     public function getAllEvaluations(Request $request)
+{   
+    $pageNumber = $request->query("page");
+    $perPage = $request->query("per_page");
+
+    try {
+        if ($name = $request->query('search')) {
+            $evaluations = Evaluation::with(['employees', 'kpis'])
+                ->whereHas('employees', function ($query) use ($name) {
+                    $query->where('name', 'LIKE', '%' . $name . '%');
+                })
+                ->paginate($perPage ?: 20);
+
+            if ($evaluations->isEmpty()) {
+                return response()->json(['message' => 'No evaluations found for the employee.'], 404);
+            }
+
+            return response()->json([
+                'message' => 'Evaluations retrieved successfully for the employee.',
+                'evaluations' => $evaluations,
+            ]);
+        }
+
+        $evaluations = Evaluation::with(['employees', 'kpis'])->paginate($perPage ?: 20);
+
+        return response()->json([
+            'message' => 'Evaluations retrieved successfully.',
+            'evaluations' => $evaluations,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Failed to retrieve evaluations.'], 500);
+    }
+}
      /**
      * Display the specified evaluation.
      *
