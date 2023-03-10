@@ -17,7 +17,12 @@ class TeamController extends Controller
     public function getTeams(Request $request)
     {
         $perPage = $request->query('per_page');
-        $teams = Team::with('employees','projects')->paginate($perPage ?: 10);
+        $name = $request->query('search');
+        if ($name) {
+            $teams =  Team::where('name', 'LIKE', '%' . $name . '%')->with('employees', 'projects')->paginate($perPage ?: 10);
+        } else {
+            $teams = Team::with('employees', 'projects')->paginate($perPage ?: 10);
+        }
         return response()->json([
             'success' => true,
             'teams' => $teams,
@@ -159,5 +164,4 @@ class TeamController extends Controller
             'message' => 'Team deleted successfully',
         ]);
     }
-    
 }
