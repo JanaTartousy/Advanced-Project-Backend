@@ -17,7 +17,7 @@ class TeamController extends Controller
     public function getTeams(Request $request)
     {
         $perPage = $request->query('per_page');
-        $teams = Team::with('employees')->paginate($perPage ?: 10);
+        $teams = Team::with('employees','projects')->paginate($perPage ?: 10);
         return response()->json([
             'success' => true,
             'teams' => $teams,

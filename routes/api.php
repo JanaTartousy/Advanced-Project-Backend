@@ -24,8 +24,8 @@ use App\Http\Controllers\EvaluationController;
 |
 */
 Route::post('/login', [UserController::class, 'login']);
+Route::post('/register', [UserController::class, 'register']);
 Route::middleware(['authorize'])->group(function () {
-
     //Routes for KPIs
     Route::post('/kpi', [KpiController::class, 'AddKpi']);
     Route::get('/kpi', [KpiController::class, 'getAll']);
@@ -39,7 +39,6 @@ Route::middleware(['authorize'])->group(function () {
     Route::post('/logout', [UserController::class, 'logout']);
     Route::delete('/user/{id}', [UserController::class, 'deleteUser']);
     Route::get('/user', [UserController::class, 'getAllUsers']);
-    Route::post('/register', [UserController::class, 'register']);
 
     //Routes for reports
     Route::Post('/report', [ReportController::class, 'addReport']);
