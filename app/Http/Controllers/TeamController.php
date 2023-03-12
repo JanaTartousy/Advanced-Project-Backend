@@ -37,7 +37,7 @@ class TeamController extends Controller
      */
     public function getTeam($id)
     {
-        $team = Team::with('employees')->find($id);
+        $team = Team::with('employees',"projects")->find($id);
 
         if (!$team) {
             return response()->json(
