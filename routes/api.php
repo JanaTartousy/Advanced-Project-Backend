@@ -53,6 +53,7 @@ Route::middleware(['authorize'])->group(function () {
     Route::post('/teams', [TeamController::class, 'store']);
     Route::patch('/teams/{id}', [TeamController::class, 'update']);
     Route::delete('/teams/{id}', [TeamController::class, 'destroy']);
+    Route::patch('/team/{id}', [EmployeeController::class, 'updateTeamId']);
 
     //Routes for employeeRoles in a project
     Route::get('/employeerole', [EmployeeRoleController::class, 'get']);

@@ -123,6 +123,38 @@ public function update(Request $request, $id)
         'employee' => $employee,
     ]);
 }
+//multiple teams_id insert
+
+public function updateTeamId(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'team_id' => 'required|exists:teams,id',
+        'employee_ids' => 'required|array',
+        'employee_ids.*' => 'required|exists:employees,id',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(
+            [
+                'message' => 'Validation error',
+                'errors' => $validator->errors(),
+            ],
+            422,
+        );
+    }
+
+    $teamId = $request->input('team_id');
+    $employeeIds = $request->input('employee_ids');
+
+    Employee::whereIn('id', $employeeIds)
+        ->update(['team_id' => $teamId]);
+
+    return response()->json([
+        'message' => 'Team ID updated successfully for selected employees',
+    ]);
+}
+
+
 // Remove a specific Employee.
 
     public function delete($id)
