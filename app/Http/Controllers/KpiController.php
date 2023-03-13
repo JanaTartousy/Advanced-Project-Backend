@@ -18,9 +18,7 @@ class KpiController extends Controller
 
     $kpi = new Kpi;
     $name = $request->input('name');
-    $description = $request->input('description');
     $kpi->name = $name;
-    $kpi->description = $description;
     $kpi->save();
 
     return response()->json([

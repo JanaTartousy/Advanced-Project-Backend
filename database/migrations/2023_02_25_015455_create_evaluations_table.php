@@ -17,7 +17,7 @@ return new class extends Migration
         Schema::create('evaluations', function (Blueprint $table) {
             $table->id();
             $table->date('date_evaluated');
-            $table->text('evaluation');
+            $table->integer('evaluation');
             $table->unsignedBigInteger('employee_id');
             $table->foreign('employee_id')->references('id')->on('employees');
             $table->unsignedBigInteger('kpi_id');

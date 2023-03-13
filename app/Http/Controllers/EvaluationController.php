@@ -19,7 +19,7 @@ class EvaluationController extends Controller
     public function AddEvaluation(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'evaluation' => 'required|string|max:255',
+            'evaluation' => 'required|numeric|min:0|max:10',
             'date_evaluated' => 'required|date',
             'employee_id' => 'nullable|exists:employees,id',
             'kpi_id' => 'nullable|exists:kpis,id',
