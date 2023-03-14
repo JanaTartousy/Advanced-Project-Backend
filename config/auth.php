@@ -42,7 +42,8 @@ return [
         ],
         'api' => [
             'driver' => 'jwt',
-            'provider' => 'users'
+            'provider' => 'users',
+            'ttl' => env('JWT_TTL', 5760),
         ],
     ],
 
