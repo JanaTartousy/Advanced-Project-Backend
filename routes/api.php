@@ -48,12 +48,12 @@ Route::middleware(['authorize'])->group(function () {
     Route::Delete('/report', [ReportController::class, 'deleteReport']);
 
     //Routes for teams
+    Route::patch('/team/members', [EmployeeController::class, 'updateTeamId']);
     Route::get('/teams', [TeamController::class, 'getTeams']);
     Route::get('/teams/{id}', [TeamController::class, 'getTeam']);
     Route::post('/teams', [TeamController::class, 'store']);
     Route::patch('/teams/{id}', [TeamController::class, 'update']);
     Route::delete('/teams/{id}', [TeamController::class, 'destroy']);
-    Route::patch('/team/{id}', [EmployeeController::class, 'updateTeamId']);
 
     //Routes for employeeRoles in a project
     Route::get('/employeerole', [EmployeeRoleController::class, 'get']);

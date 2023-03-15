@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Employee;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator; 
 
@@ -73,8 +76,24 @@ class EmployeeController extends Controller
 }
 // Display list of all Employees.
 
-    public function getEmployees()
-    {
+    public function getEmployees(Request $request)
+    {   if($request->page!=null){
+        $name = $request->query('search');
+        if ($name) {
+            $employees = Employee::where(function ($query) use ($name) {
+                $query->where('first_name', 'LIKE', '%' . $name . '%')
+                      ->orWhere('last_name', 'LIKE', '%' . $name . '%');
+            })
+            ->with('team.projects','employeeRole.projects')
+            ->paginate(10);
+
+        }else{
+        $employees = Employee::with('team.projects','employeeRole.projects')->paginate(10);}
+        return response()->json([
+            'employees' => $employees,
+        ]);
+
+}
         $employees = Employee::with('team.projects','employeeRole.projects')->get();
         return response()->json([
             'employees' => $employees,
@@ -125,34 +144,45 @@ public function update(Request $request, $id)
 }
 //multiple teams_id insert
 
-public function updateTeamId(Request $request)
+public function updateTeamId(Request $request): JsonResponse
 {
     $validator = Validator::make($request->all(), [
         'team_id' => 'required|exists:teams,id',
-        'employee_ids' => 'required|array',
-        'employee_ids.*' => 'required|exists:employees,id',
+        'employee_ids' => 'nullable|array',
+        'employee_ids.*' => 'nullable|exists:employees,id',
+        'remove_employee_ids' => 'nullable|array',
+        'remove_employee_ids.*' => 'nullable|exists:employees,id',
     ]);
 
     if ($validator->fails()) {
-        return response()->json(
-            [
-                'message' => 'Validation error',
-                'errors' => $validator->errors(),
-            ],
-            422,
-        );
+        return response()->json([
+            'message' => 'Validation error',
+            'errors' => $validator->errors(),
+        ], 422);
     }
 
-    $teamId = $request->input('team_id');
-    $employeeIds = $request->input('employee_ids');
+    try {
+        DB::transaction(function () use ($request) {
+            $teamId = $request->input('team_id');
+            $employeeIds = $request->input('employee_ids', []);
+            $removeEmployeeIds = $request->input('remove_employee_ids', []);
 
-    Employee::whereIn('id', $employeeIds)
-        ->update(['team_id' => $teamId]);
+            Employee::whereIn('id', $employeeIds)->update(['team_id' => $teamId]);
+            Employee::whereIn('id', $removeEmployeeIds)->update(['team_id' => null]);
+        });
+    } catch (Exception $e) {
+        return response()->json([
+            'message' => 'Failed to update team ID for employees',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
 
     return response()->json([
         'message' => 'Team ID updated successfully for selected employees',
     ]);
 }
+
+
 
 
 // Remove a specific Employee.
