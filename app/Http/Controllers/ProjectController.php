@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Models\Project;
+use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ProjectController extends Controller
@@ -20,7 +22,7 @@ class ProjectController extends Controller
         $perPage = $request->query('per_page');
 
         if($name=$request->query('search')){
-        $project = Project::where('name', 'LIKE', '%' . $name . '%')->paginate($perPage ?: 20);;
+        $project = Project::where('name', 'LIKE', '%' . $name . '%')->paginate($perPage ?: 10);
 
         if (!$project) {
             return response()->json(['message' => 'Project not found'], 404);
@@ -163,5 +165,42 @@ class ProjectController extends Controller
             return response()->json(['message' => 'Project not found'], 404);
         }
     }
-
+    public function updateProjectTeamId(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'team_id' => 'required|exists:teams,id',
+            'item_ids' => 'nullable|array',
+            'item_ids.*' => 'nullable|exists:projects,id',
+            'remove_item_ids' => 'nullable|array',
+            'remove_item_ids.*' => 'nullable|exists:projects,id',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+    
+        try {
+            DB::transaction(function () use ($request) {
+                $teamId = $request->input('team_id');
+                $projectIds = $request->input('item_ids', []);
+                $removeProjectIds = $request->input('remove_item_ids', []);
+    
+                Project::whereIn('id', $projectIds)->update(['team_id' => $teamId]);
+                Project::whereIn('id', $removeProjectIds)->update(['team_id' => null]);
+            });
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update team ID for projects',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    
+        return response()->json([
+            'message' => 'Team ID updated successfully for selected projects',
+        ]);
+    }
+    
 }

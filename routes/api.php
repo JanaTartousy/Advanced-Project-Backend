@@ -49,6 +49,7 @@ Route::middleware(['authorize'])->group(function () {
 
     //Routes for teams
     Route::patch('/team/members', [EmployeeController::class, 'updateTeamId']);
+    Route::patch('/team/projects', [ProjectController::class, 'updateProjectTeamId']);
     Route::get('/teams', [TeamController::class, 'getTeams']);
     Route::get('/teams/{id}', [TeamController::class, 'getTeam']);
     Route::post('/teams', [TeamController::class, 'store']);

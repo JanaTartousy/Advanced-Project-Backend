@@ -148,10 +148,10 @@ public function updateTeamId(Request $request): JsonResponse
 {
     $validator = Validator::make($request->all(), [
         'team_id' => 'required|exists:teams,id',
-        'employee_ids' => 'nullable|array',
-        'employee_ids.*' => 'nullable|exists:employees,id',
-        'remove_employee_ids' => 'nullable|array',
-        'remove_employee_ids.*' => 'nullable|exists:employees,id',
+        'item_ids' => 'nullable|array',
+        'item_ids.*' => 'nullable|exists:employees,id',
+        'remove_item_ids' => 'nullable|array',
+        'remove_item_ids.*' => 'nullable|exists:employees,id',
     ]);
 
     if ($validator->fails()) {
@@ -164,8 +164,8 @@ public function updateTeamId(Request $request): JsonResponse
     try {
         DB::transaction(function () use ($request) {
             $teamId = $request->input('team_id');
-            $employeeIds = $request->input('employee_ids', []);
-            $removeEmployeeIds = $request->input('remove_employee_ids', []);
+            $employeeIds = $request->input('item_ids', []);
+            $removeEmployeeIds = $request->input('remove_item_ids', []);
 
             Employee::whereIn('id', $employeeIds)->update(['team_id' => $teamId]);
             Employee::whereIn('id', $removeEmployeeIds)->update(['team_id' => null]);
