@@ -82,7 +82,7 @@ Route::middleware(['authorize'])->group(function () {
     Route::get('/employees', [EmployeeController::class, 'getEmployees']);
     Route::get('/employees/{id}', [EmployeeController::class, 'getEmployee']);
     Route::patch('/employees/{id}', [EmployeeController::class, 'update']);
-    Route::delete('/employees/{id}', [EmployeeController::class, 'destroy']);
+    Route::delete('/employees/{id}', [EmployeeController::class, 'delete']);
 
     //Routes for roles
     Route::get('/roles', [RoleController::class, 'getRoles']);
